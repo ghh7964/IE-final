@@ -1,0 +1,14 @@
+/* 장면별 스타일. 각 파일의 선택자는 반드시 .scene[data-scene="N"] 아래로 한정한다. */
+@import url("scenes/s00.css");
+@import url("scenes/s01.css");
+@import url("scenes/s02.css");
+@import url("scenes/s03.css");
+@import url("scenes/s04.css");
+@import url("scenes/s05.css");
+@import url("scenes/s06.css");
+@import url("scenes/s07.css");
+@import url("scenes/s08.css");
+@import url("scenes/s09.css");
+@import url("scenes/s10.css");
+@import url("scenes/s11.css");
+@import url("scenes/s12.css");

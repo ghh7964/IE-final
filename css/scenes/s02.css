@@ -1,0 +1,105 @@
+/* 장면 2: 두 기숙학교 */
+
+/* 들어오는 것은 나가는 것이 비운 뒤에(겹침 금지). 나가는 것은 바로. */
+.scene[data-scene="2"] [data-in].on,
+.scene[data-scene="2"] [data-out]:not(.off) { transition-delay: 450ms; }
+.scene[data-scene="2"].s2-still [data-in],
+.scene[data-scene="2"].s2-still [data-out] { transition-delay: 0s; }
+
+/* 1 학교별 기록: 위쪽(하늘·산 자리) 두 열. 3D 학교는 화면 가운데 높이 양옆에 있다. */
+.scene[data-scene="2"] .s2-col { position: absolute; top: 96px; width: 450px; display: flex; gap: 20px; align-items: flex-start; }
+.scene[data-scene="2"] .s2-col-hanmin { left: 70px; }
+.scene[data-scene="2"] .s2-col-gbs { left: 600px; }
+.scene[data-scene="2"] .s2-print { position: relative; flex: none; width: 168px; height: 146px; }
+.scene[data-scene="2"] .s2-print img { height: 102px; }
+.scene[data-scene="2"] .s2-print figcaption { font-size: 16px; }
+.scene[data-scene="2"] .s2-facts { padding-top: 2px; text-shadow: 0 1px 12px rgb(0 0 0 / 90%); }
+.scene[data-scene="2"] .s2-facts h3 { margin: 0; font: 800 24px/1.3 var(--font); letter-spacing: -.03em; color: var(--night-ink); white-space: nowrap; }
+.scene[data-scene="2"] .s2-facts .sch { box-shadow: inset 0 -4px 0 var(--c); }
+.scene[data-scene="2"] .s2-kind { margin: 8px 0 14px; font: 500 20px var(--font); color: var(--night-ink); }
+.scene[data-scene="2"] .s2-nums { display: grid; grid-template-columns: auto 1fr; align-items: baseline; column-gap: 12px; row-gap: 6px; }
+.scene[data-scene="2"] .s2-nums .num { font-size: 44px; text-align: right; white-space: nowrap; }
+.scene[data-scene="2"] .s2-col-hanmin .num { color: var(--hanmin); }
+.scene[data-scene="2"] .s2-col-gbs .num { color: var(--gbs); }
+.scene[data-scene="2"] .s2-nl { font: 500 19px var(--font); color: var(--night-soft); white-space: nowrap; }
+
+/* 기록 → 현장 지시선 */
+.scene[data-scene="2"] .s2-leaders { position: absolute; inset: 0; width: 100%; height: 100%; }
+.scene[data-scene="2"] .s2-ld { fill: none; stroke: var(--hanmin); stroke-width: 2; stroke-dasharray: 3 7; }
+.scene[data-scene="2"] .s2-ld.s2-lg { stroke: var(--gbs); }
+.scene[data-scene="2"] .s2-dot { fill: none; stroke: var(--hanmin); stroke-width: 2.5; }
+.scene[data-scene="2"] .s2-dot.s2-lg { stroke: var(--gbs); }
+
+/* 2 중심 목적의 원: 3D 부지 한가운데에 놓인 반투명 판(분석 층) */
+.scene[data-scene="2"] .s2-ring { position: absolute; width: 0; height: 0; }
+.scene[data-scene="2"] .s2-ring-in {
+  position: absolute; left: -150px; top: -150px; width: 300px; height: 300px; border-radius: 50%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center;
+  background: radial-gradient(circle, color-mix(in srgb, var(--night) 78%, transparent) 55%, color-mix(in srgb, var(--night) 40%, transparent));
+  border: 2px solid var(--c); box-shadow: 0 0 26px color-mix(in srgb, var(--c) 55%, transparent), inset 0 0 30px color-mix(in srgb, var(--c) 25%, transparent);
+}
+.scene[data-scene="2"] .s2-ring-in::after { content: ""; position: absolute; inset: -22px; border-radius: 50%; border: 1px dashed color-mix(in srgb, var(--c) 60%, transparent); }
+.scene[data-scene="2"] .s2-ring-h .s2-ring-in { --c: var(--hanmin); }
+.scene[data-scene="2"] .s2-ring-g .s2-ring-in { --c: var(--gbs); }
+.scene[data-scene="2"] .s2-ring-in span { font: 700 20px var(--font); color: var(--c); }
+.scene[data-scene="2"] .s2-ring-in small { font: 500 18px var(--font); color: var(--night-soft); }
+.scene[data-scene="2"] .s2-ring-in b { font: 800 40px/1.15 var(--font); letter-spacing: -.03em; color: var(--night-ink); }
+/* 원은 위치(앵커)를 따라가는 빈 상자, 나타나고 사라지는 것은 안쪽 판 */
+.scene[data-scene="2"] .s2-ring-in:not(.on) { transform: scale(.9); }
+
+/* 3 15초 설명 */
+  position: absolute; left: 330px; top: 50px; width: 260px; height: 200px; padding: 20px 22px;
+  background: color-mix(in srgb, var(--night) 92%, transparent); border: 1px solid var(--night-3);
+  box-shadow: 0 24px 50px rgb(0 0 0 / 55%); color: var(--night-ink);
+}
+@keyframes s2-bar { to { transform: scaleX(1); } }
+@keyframes s2-in { from { opacity: 0; transform: translateY(8px); } }
+
+/* 3 온라인 채점 사이트 화면: 실제 사이트처럼 흰 화면, 파란 제목 밑줄, 빨간 제출 단추, 초록 "맞았습니다!!" */
+.scene[data-scene="2"] .s2-oj { position: absolute; left: 40px; top: 120px; width: 920px; background: var(--screen); color: var(--screen-ink); border-radius: 8px; overflow: hidden; box-shadow: 0 30px 60px rgb(0 0 0 / 60%); font-family: var(--font); }
+.scene[data-scene="2"] .oj-top { display: flex; align-items: baseline; gap: 12px; padding: 16px 26px 14px; border-bottom: 1px solid var(--screen-line); }
+.scene[data-scene="2"] .oj-top b { font: 800 22px var(--font); color: var(--oj-blue); letter-spacing: -.02em; }
+.scene[data-scene="2"] .oj-top small { font: 500 15px var(--font); color: var(--screen-soft); }
+.scene[data-scene="2"] .oj-top nav { margin-left: auto; display: flex; gap: 22px; font: 500 16px var(--font); color: var(--screen-soft); }
+.scene[data-scene="2"] .oj-top nav .on { color: var(--oj-blue); box-shadow: inset 0 -2px 0 var(--oj-blue); padding-bottom: 4px; }
+.scene[data-scene="2"] .oj-body { display: grid; grid-template-columns: 1fr 360px; gap: 30px; padding: 22px 26px 26px; }
+.scene[data-scene="2"] .s2-oj h3 { margin: 0 0 14px; font: 800 30px var(--font); letter-spacing: -.03em; }
+.scene[data-scene="2"] .s2-oj h3 span { margin-left: 8px; }
+.scene[data-scene="2"] .s2-oj h5 { display: inline-block; margin: 18px 0 10px; padding-bottom: 6px; font: 600 20px var(--font); box-shadow: inset 0 -2.5px 0 var(--oj-blue); }
+.scene[data-scene="2"] .s2-oj h6 { margin: 0 0 6px; font: 600 16px var(--font); color: var(--screen-soft); }
+.scene[data-scene="2"] .s2-oj table { width: 100%; border-collapse: collapse; font-size: 17px; }
+.scene[data-scene="2"] .s2-oj th { text-align: left; font-weight: 700; padding: 6px 8px; border-bottom: 1px solid var(--screen-line); }
+.scene[data-scene="2"] .s2-oj td { padding: 8px 8px; }
+.scene[data-scene="2"] .oj-prob p { margin: 0; font: 500 23px/1.5 var(--font); }
+.scene[data-scene="2"] .oj-ex { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+.scene[data-scene="2"] .s2-oj pre { margin: 0; padding: 10px 14px; background: var(--oj-code); border: 1px solid var(--screen-line); border-radius: 4px; font: 500 22px/1.5 var(--mono); color: var(--screen-ink); }
+.scene[data-scene="2"] .oj-code { white-space: pre; }
+.scene[data-scene="2"] .oj-ln { display: block; min-height: 1.5em; }
+.scene[data-scene="2"] .oj-ln b { font-weight: inherit; }
+.scene[data-scene="2"] .oj-code i { display: inline-block; width: 1.6em; font-style: normal; color: var(--screen-soft); opacity: .7; }
+.scene[data-scene="2"] .oj-side pre.oj-code { font-size: 18px; }
+/* 입력 중: 깜빡이는 커서, 편집기 테두리 강조 */
+.scene[data-scene="2"].s2-typing .oj-code { border-color: var(--oj-blue); box-shadow: 0 0 0 2px rgb(0 118 192 / 18%); }
+.scene[data-scene="2"].s2-typing .oj-ln.cur b::after { content: ""; display: inline-block; width: 2px; height: 1.1em; margin-left: 1px; vertical-align: -.18em; background: var(--screen-ink); animation: s2-blink 1s steps(1) infinite; }
+@keyframes s2-blink { 50% { opacity: 0; } }
+.scene[data-scene="2"] .oj-side { position: relative; }
+.scene[data-scene="2"] .oj-submit { display: table; margin-top: 12px; padding: 7px 22px; border-radius: 5px; background: var(--oj-red); color: var(--screen); font: 700 17px var(--font); transition: transform 120ms ease, filter 120ms ease; }
+.scene[data-scene="2"].s2-press .oj-submit { transform: scale(.93); filter: brightness(.82); }
+/* 마우스 포인터: 입력이 끝나면 나타나 제출 버튼으로 간다 */
+.scene[data-scene="2"] .oj-ptr { position: absolute; width: 26px; height: 36px; opacity: 0; pointer-events: none; transition: left 650ms var(--ease), top 650ms var(--ease), opacity 200ms ease; z-index: 2; }
+.scene[data-scene="2"] .oj-ptr path { fill: var(--screen-ink); stroke: var(--screen); stroke-width: 1.4; stroke-linejoin: round; }
+.scene[data-scene="2"].s2-aim .oj-ptr, .scene[data-scene="2"].s2-press .oj-ptr { opacity: 1; }
+.scene[data-scene="2"].s2-sent .oj-ptr { opacity: 0; transition: opacity 500ms 500ms ease; }
+/* 채점 현황: 제출하면 줄이 생긴다 */
+.scene[data-scene="2"] .oj-row { visibility: hidden; }
+.scene[data-scene="2"].s2-sent .oj-row { visibility: visible; animation: s2-in 300ms var(--ease); }
+.scene[data-scene="2"] .oj-res { font-weight: 700; }
+.scene[data-scene="2"] .oj-wait { color: var(--screen-soft); display: inline-flex; align-items: center; gap: 8px; }
+.scene[data-scene="2"] .oj-wait i { display: inline-block; width: 60px; height: 6px; border-radius: 3px; background: var(--screen-line); overflow: hidden; position: relative; }
+.scene[data-scene="2"] .oj-wait i::after { content: ""; position: absolute; inset: 0; background: var(--screen-soft); transform: scaleX(0); transform-origin: left; }
+.scene[data-scene="2"].s2-sent:not(.s2-judged) .oj-wait i::after { animation: s2-bar 1800ms linear forwards; }
+.scene[data-scene="2"] .oj-ok { display: none; color: var(--oj-ok); font-size: 19px; }
+.scene[data-scene="2"].s2-judged .oj-wait { display: none; }
+.scene[data-scene="2"].s2-judged .oj-ok { display: inline; animation: s2-in 380ms var(--ease); }
+.scene[data-scene="2"] .oj-time::after { content: "—"; color: var(--screen-soft); }
+.scene[data-scene="2"].s2-judged .oj-time::after { content: "40 ms"; color: var(--screen-ink); }

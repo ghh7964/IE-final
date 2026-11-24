@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+<link rel="icon" href="data:," />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <title>정보 분야 심화학습 지원 구조 비교</title>
+  <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" />
+  <script type="importmap">{ "imports": { "three": "./vendor/three.module.js" } }</script>
+  <link rel="stylesheet" href="css/deck.css" />
+  <link rel="stylesheet" href="css/scenes.css" />
+</head>
+<body>
+  <main class="presentation" aria-label="교육학개론 학기말 보고서 발표">
+    <div class="deck" id="deck" data-mode="split">
+      <!-- 현장 층: 무대 전체를 덮는 3D 세계 -->
+      <div class="world" id="world" aria-hidden="true"></div>
+      <div class="world-shade" aria-hidden="true"></div>
+
+      <!-- 책상: 기록철이 놓이는 곳 -->
+      <div class="desk" aria-hidden="true"></div>
+      <!-- 기록 층: 책상 위의 기록철(보고서 원문) -->
+      <aside class="report-pane" id="reportPane" aria-label="학기말 보고서 원문">
+        <header class="report-toolbar">
+          <span class="report-location" id="reportLocation"></span>
+          <span class="report-label">학기말 보고서</span>
+        </header>
+        <div class="report-scroll" id="reportScroll" tabindex="0">
+          <article class="report-doc" id="reportDoc"><p class="rp-loading">원문을 불러오는 중…</p></article>
+        </div>
+      </aside>
+
+      <!-- 현장·분석 층: 오른쪽 시각화 -->
+      <section class="visual" id="visual" aria-live="polite">
+        <div class="scenes" id="scenes"></div>
+        <div class="stamp" id="stamp" aria-hidden="true"></div>
+      </section>
+
+      <div class="lamp" aria-hidden="true"></div>
+      <svg class="strings" id="strings" viewBox="0 0 1600 900" aria-hidden="true"></svg>
+      <div class="chapter" id="chapter" aria-hidden="true"></div>
+      <div class="grain" aria-hidden="true"></div>
+      <div class="letterbox top" aria-hidden="true"></div>
+      <div class="letterbox bottom" aria-hidden="true"></div>
+      <div class="blackout" id="blackout" aria-hidden="true"></div>
+
+      <footer class="hud" id="hud">
+        <div class="progress"><span id="progressBar"></span></div>
+        <span class="counter"><b id="curStep">01</b> / <span id="totStep">00</span></span>
+      </footer>
+
+      <nav class="overview" id="overview" aria-label="장면 목록" hidden>
+        <h2>장면 목록 <small>O로 닫기</small></h2>
+        <ol id="overviewList"></ol>
+      </nav>
+    </div>
+  </main>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

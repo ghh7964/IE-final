@@ -1,0 +1,75 @@
+/* 장면 3: 근거 — 책상 위 자료 더미 (1 공식 문서 표지 → 2 공식 문서에 담기지 않는 것) */
+
+/* ── 표지 더미 ── */
+.scene[data-scene="3"] .s3-off { position: absolute; inset: 0; transform-origin: 0 0; transition: transform 800ms var(--ease), opacity 600ms ease; }
+.scene[data-scene="3"] .s3-pile {
+  position: absolute; width: var(--w); height: calc(var(--w) * 1.414); isolation: isolate;
+  transform: rotate(var(--r)); transition: opacity 380ms ease, transform 520ms var(--ease);
+  --c: var(--hanmin);
+}
+.scene[data-scene="3"] .s3-pile.gbs { --c: var(--gbs); }
+.scene[data-scene="3"] .s3-pile.nat { --c: #7d8ba3; }
+/* 맨 위 표지: 실제 계획서 표지처럼 연도 · 제목 · 학교 이름, 안쪽 테두리, 아래 학교 색 띠 */
+.scene[data-scene="3"] .s3-cover {
+  --rot: 0deg; left: 0; top: 0; width: 100%; height: 100%; z-index: 9; box-sizing: border-box;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 16px 8px 0; background: linear-gradient(180deg, var(--paper-hi), var(--paper));
+  outline: 1px solid color-mix(in srgb, var(--paper-ink) 40%, transparent); outline-offset: -8px;
+  border-bottom: 10px solid color-mix(in srgb, var(--c) 70%, var(--paper-ink));
+  box-shadow: 0 16px 30px rgb(0 0 0 / 50%), 0 3px 8px rgb(0 0 0 / 35%);
+}
+.scene[data-scene="3"] .cv-yr { font: 600 11px var(--serif); color: var(--paper-soft); letter-spacing: .04em; }
+.scene[data-scene="3"] .cv-t { margin: 18px 0 0; font: 800 14.5px/1.35 var(--serif); letter-spacing: -.02em; color: var(--paper-ink); word-break: keep-all; }
+.scene[data-scene="3"] .cv-sch { margin-top: auto; margin-bottom: 14px; font: 600 10px var(--serif); color: var(--paper-soft); }
+.scene[data-scene="3"] .main .s3-cover { padding: 34px 18px 0; }
+.scene[data-scene="3"] .main .cv-yr { font-size: 16px; }
+.scene[data-scene="3"] .main .cv-t { margin-top: 56px; font-size: 27px; }
+.scene[data-scene="3"] .main .cv-sch { font-size: 15px; margin-bottom: 26px; }
+/* 아래에 깔린 지난 해치: 한 부씩 위로 비죽 나와 연도가 보인다 */
+.scene[data-scene="3"] .s3-under {
+  position: absolute; left: calc(var(--k) * 2px); top: calc(var(--k) * -15px); width: 100%; height: 100%; z-index: calc(9 - var(--k));
+  background: linear-gradient(180deg, var(--paper), var(--paper-lo));
+  border-top: 1px solid color-mix(in srgb, var(--paper-ink) 18%, transparent);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 40%);
+}
+.scene[data-scene="3"] .s3-under span { display: block; padding: 0 7px; text-align: right; font: 600 10.5px/14px var(--serif); color: var(--paper-soft); }
+
+/* ── 공식 문서에 담기지 않는 것: 재질이 다른 자료 ── */
+.scene[data-scene="3"] .s3-sup > * { position: absolute; transition: opacity 380ms ease, transform 520ms var(--ease); }
+.scene[data-scene="3"] .s3-blog { left: 70px; top: 430px; width: 400px; }
+.scene[data-scene="3"] .s3-wikis { left: 540px; top: 440px; width: 370px; height: 210px; transform: rotate(var(--rot)); }
+.scene[data-scene="3"] .s3-wiki { --rot: 0deg; left: 0; top: 0; width: 100%; height: 100%; box-sizing: border-box; padding: 0 24px 22px; z-index: 3; }
+/* 같은 위키의 다른 문서 두 장이 뒤에 깔려 제목이 보인다 */
+.scene[data-scene="3"] .s3-wtab { position: absolute; left: calc(var(--k) * 12px); top: calc(var(--k) * -30px); width: 100%; height: 100%; z-index: calc(3 - var(--k));
+  background: var(--screen); border-top: 4px solid var(--screen-soft); box-shadow: 0 6px 14px rgb(0 0 0 / 40%); }
+.scene[data-scene="3"] .s3-wtab span { display: block; padding: 4px 14px 0; font: 700 15px var(--font); color: var(--screen-soft); text-align: right; }
+.scene[data-scene="3"] .s3-memo { left: 540px; top: 76px; width: 400px; padding-top: 7px; padding-bottom: 12px; }
+.scene[data-scene="3"] .s3-blog .post-h b { font-size: 21px; }
+.scene[data-scene="3"] .s3-blog .post-h small { font-size: 15px; }
+.scene[data-scene="3"] .wk-h { display: flex; justify-content: space-between; margin: 0 -24px 14px; padding: 9px 16px; background: var(--screen-line); font: 600 14px var(--font); color: var(--screen-soft); }
+.scene[data-scene="3"] .wk-h span:first-child { font-weight: 800; color: var(--screen-ink); }
+.scene[data-scene="3"] .s3-wiki h3 { margin: 0 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--screen-line); font: 800 26px var(--font); color: var(--screen-ink); }
+.scene[data-scene="3"] .s3-bars { display: flex; flex-direction: column; gap: 11px; }
+.scene[data-scene="3"] .s3-bars i { display: block; height: 11px; border-radius: 2px; background: color-mix(in srgb, var(--screen-ink) 22%, transparent); }
+.scene[data-scene="3"] .s3-bars i[style="width:0%"] { height: 2px; background: none; }
+.scene[data-scene="3"] .s3-memo p { margin: 0; font: 500 21px/36px var(--serif); color: var(--paper-ink); }
+.scene[data-scene="3"] .s3-memo .m-h { font-weight: 800; }
+
+/* ── 1 표지가 한 부씩 놓인다(장면에 처음 들어올 때만): 주된 자료 두 부 먼저 ── */
+.scene[data-scene="3"] .s3-pile { opacity: 0; transform: translateY(-26px) rotate(calc(var(--r) + 3deg)) scale(1.03); }
+.scene[data-scene="3"].s3-landed .s3-pile { opacity: 1; transform: rotate(var(--r)); }
+.scene[data-scene="3"].s3-landing .s3-pile { transition-delay: calc(var(--i) * 180ms + 350ms); }
+
+/* ── 2 공식 문서 더미는 왼쪽 위로 밀려나 흐려지고, 다른 재질의 자료가 놓인다 ── */
+.scene[data-scene="3"][data-sub="2"] .s3-off { transform: translate(20px, 10px) scale(.5); opacity: .4; }
+.scene[data-scene="3"] .s3-sup > * { opacity: 0; transform: translateY(-26px) rotate(calc(var(--rot) + 3deg)); }
+.scene[data-scene="3"][data-sub="2"] .s3-sup > * { opacity: 1; transform: rotate(var(--rot)); transition-delay: calc(var(--i) * 280ms + 500ms); }
+
+.scene[data-scene="3"].s3-still .s3-off, .scene[data-scene="3"].s3-still .s3-pile, .scene[data-scene="3"].s3-still .s3-sup > * { transition: none !important; }
+
+/* 경기북과학고 홈페이지 학교소식: 수상 게시물 목록(게시일만) */
+.scene[data-scene="3"] .s3-web { height: auto; }
+.scene[data-scene="3"] .s3-koi { --rot: 0deg; position: relative; font-family: var(--font); background: var(--screen); color: var(--screen-ink); padding: 0 12px 10px; border-top: 4px solid color-mix(in srgb, var(--gbs) 70%, var(--screen-ink)); box-shadow: 0 16px 30px rgb(0 0 0 / 50%); }
+.scene[data-scene="3"] .s3-koi .wk-h { margin: 0 -12px 6px; padding: 7px 12px; font-size: 12px; }
+.scene[data-scene="3"] .s3-koi p { margin: 0; padding: 5px 0; border-bottom: 1px solid var(--screen-line); font: 600 12.5px var(--font); color: var(--screen-ink); }
+.scene[data-scene="3"] .s3-koi p span { display: block; font: 500 10.5px var(--mono); color: var(--screen-soft); }

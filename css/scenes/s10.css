@@ -1,0 +1,58 @@
+/* 장면 10: 반전 — 흐린 현장 위에 펼친 2D 경기도 지도 */
+.scene[data-scene="10"].no-tr, .scene[data-scene="10"].no-tr * { transition: none !important; animation: none !important; }
+.scene[data-scene="10"] .s10-map {
+  position: absolute; inset: 0; width: 1600px; height: 900px;
+  -webkit-mask-image: linear-gradient(90deg, black 0 700px, transparent 860px), linear-gradient(180deg, black 0 760px, transparent 900px);
+  -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, black 0 700px, transparent 860px), linear-gradient(180deg, black 0 760px, transparent 900px); mask-composite: intersect;
+}
+.scene[data-scene="10"] .s10-map text { font-family: var(--font); paint-order: stroke; stroke: rgb(0 0 0 / 65%); stroke-width: 5px; stroke-linejoin: round; }
+.scene[data-scene="10"] .gg { fill: color-mix(in srgb, var(--night-ink) 5%, transparent); stroke: color-mix(in srgb, var(--night-ink) 34%, transparent); stroke-width: 2; stroke-linejoin: round; }
+.scene[data-scene="10"] .seoul { fill: color-mix(in srgb, var(--night-ink) 7%, transparent); stroke: color-mix(in srgb, var(--night-ink) 22%, transparent); stroke-width: 1.5; stroke-dasharray: 5 5; }
+.scene[data-scene="10"] .lab-seoul { font-size: 20px; font-weight: 600; fill: var(--night-soft); text-anchor: middle; }
+.scene[data-scene="10"] .lab-gg { font-size: 24px; font-weight: 700; fill: var(--night-faint); letter-spacing: .3em; text-anchor: middle; }
+
+.scene[data-scene="10"] .city circle { fill: var(--night-ink); }
+.scene[data-scene="10"] .city .nm { font-size: 34px; font-weight: 800; fill: var(--night-ink); }
+.scene[data-scene="10"] .city .sb { font-size: 22px; font-weight: 600; fill: var(--night-soft); }
+.scene[data-scene="10"] .city.suwon circle { fill: var(--lamp-deep); }
+.scene[data-scene="10"] .city.paju circle { fill: var(--hanmin); filter: url(#s10glow); }
+.scene[data-scene="10"] .city.dim circle { fill: var(--gbs); }
+.scene[data-scene="10"] .city.dim text { font-size: 19px; font-weight: 600; fill: var(--night-faint); }
+.scene[data-scene="10"] .city.uni { opacity: 0; transition: opacity 600ms ease; }
+.scene[data-scene="10"] .city.uni.shown { opacity: 1; }
+.scene[data-scene="10"] .city.uni circle { fill: var(--night-soft); }
+.scene[data-scene="10"] .city.uni text { font-size: 22px; font-weight: 600; fill: var(--night-soft); }
+
+/* 호: 교사는 깊은 불빛, 나는 노란 불빛 */
+.scene[data-scene="10"] .arc1, .scene[data-scene="10"] .arc-out, .scene[data-scene="10"] .arc-back { fill: none; stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: 1; }
+.scene[data-scene="10"] .arc1 { stroke: var(--lamp-deep); stroke-width: 4; filter: url(#s10glow); }
+.scene[data-scene="10"] .arc-out { stroke: color-mix(in srgb, var(--lamp) 45%, transparent); stroke-width: 2; stroke-dasharray: 1 1; }
+.scene[data-scene="10"] .arc-back { stroke: var(--lamp); stroke-width: 3.5; filter: url(#s10glow); }
+.scene[data-scene="10"] .drawn { stroke-dashoffset: 0; }
+.scene[data-scene="10"] .anim { transition: stroke-dashoffset 1800ms cubic-bezier(.45, 0, .55, 1); }
+.scene[data-scene="10"] .arc-out.anim { transition-duration: 1000ms; }
+.scene[data-scene="10"] .arc-back.anim { transition-duration: 1400ms; }
+
+.scene[data-scene="10"] .fig { fill: currentColor; opacity: 0; transition: opacity 500ms ease; }
+.scene[data-scene="10"] .fig.shown { opacity: 1; }
+.scene[data-scene="10"] .fig { filter: drop-shadow(0 0 8px currentColor); }
+.scene[data-scene="10"] .figlab { font-size: 24px; font-weight: 700; opacity: 0; transition: opacity 500ms; }
+.scene[data-scene="10"] .figlab.shown { opacity: 1; }
+.scene[data-scene="10"] .figlab.t { fill: var(--lamp-deep); text-anchor: end; }
+.scene[data-scene="10"] .figlab.me { fill: var(--lamp); text-anchor: middle; font-size: 28px; }
+
+/* 연표 */
+.scene[data-scene="10"] .s10-tl { position: absolute; left: 860px; top: 110px; width: 690px; list-style: none; margin: 0; padding: 0 0 0 40px; }
+.scene[data-scene="10"] .s10-tl::before { content: ""; position: absolute; left: 7px; top: 14px; bottom: 30px; width: 2px; background: var(--night-faint); }
+.scene[data-scene="10"] .s10-tl li { position: relative; display: grid; grid-template-columns: 132px 1fr; column-gap: 18px; padding: 8px 0 18px; text-shadow: 0 1px 12px rgb(0 0 0 / 90%); opacity: 0; transform: translateX(16px); transition: opacity 600ms ease, transform 600ms var(--ease); }
+.scene[data-scene="10"] .s10-tl li.shown { opacity: 1; transform: none; }
+.scene[data-scene="10"] .s10-tl li::before { content: ""; position: absolute; left: -40px; top: 15px; width: 12px; height: 12px; border-radius: 50%; background: var(--night); border: 3px solid var(--lamp-deep); }
+.scene[data-scene="10"] .s10-tl li.me::before { border-color: var(--lamp); background: var(--lamp); }
+.scene[data-scene="10"] .s10-tl .d { font: 600 22px/1.4 var(--mono); color: var(--lamp-deep); }
+.scene[data-scene="10"] .s10-tl li.me .d { color: var(--lamp); }
+.scene[data-scene="10"] .s10-tl .t { font: 700 28px/1.3 var(--font); letter-spacing: -.03em; color: var(--night-ink); }
+.scene[data-scene="10"] .s10-tl .s { grid-column: 2; margin-top: 4px; font: 500 20px var(--font); color: var(--night-soft); }
+
+/* 하단 자막: 지도를 비켜 오른쪽에 */
+.scene[data-scene="10"] .s10-lt { left: 860px; max-width: 700px; }
+.scene[data-scene="10"] .s10-lt[data-in].on { transition-delay: 520ms; }

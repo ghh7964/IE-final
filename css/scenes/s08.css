@@ -1,0 +1,95 @@
+/* 장면 8: ALPS는 어디로 */
+.scene[data-scene="8"] { --s8-shadow: 0 1px 12px rgb(0 0 0 / 95%); }
+
+/* 1 카메라가 도착하기 전: 연도·간판·출처를 숨겨 두었다가 첫 조각과 함께 띄운다 */
+.scene[data-scene="8"].s8-wait :is(.s8-year, .s8-pl) { opacity: 0; }
+.scene[data-scene="8"].s8-snap :is(.s8-year, .s8-pl, .s8-scrap) { transition: none !important; }
+
+/* 1 연도: 장면 6의 시계와 같은 자리, 같은 모양 */
+.scene[data-scene="8"] .s8-year { position: absolute; right: 56px; top: 26px; font: 500 64px/1 var(--mono); color: var(--night-ink); text-shadow: 0 2px 20px rgb(0 0 0 / 80%); }
+.scene[data-scene="8"][data-year="2024"] .s8-year,
+.scene[data-scene="8"][data-year="2025"] .s8-year { color: var(--night-soft); }
+
+/* 1 정보 2실 간판(3D 위치 라벨): 지시선은 왼쪽, 글은 오른쪽으로 */
+.scene[data-scene="8"] .s8-pl { transform: translate(-2px, -100%); padding: 0 0 70px 18px; min-width: 520px; text-shadow: var(--s8-shadow); }
+.scene[data-scene="8"] .s8-pl::after { content: ""; position: absolute; left: 0; bottom: 0; width: 1px; height: 100%; background: var(--night-soft); opacity: .7; }
+.scene[data-scene="8"] .s8-sign { display: none; flex-direction: column; gap: 4px; }
+.scene[data-scene="8"] .s8-sign.show { display: flex; animation: s8-in 500ms var(--ease); }
+@keyframes s8-in { from { opacity: 0; transform: translateY(8px); } }
+.scene[data-scene="8"] .s8-sign b { font: 800 34px var(--font); color: var(--gbs); white-space: nowrap; }
+.scene[data-scene="8"] .s8-sign b.gone { color: var(--night-soft); text-decoration: none; opacity: .6; }
+.scene[data-scene="8"] .s8-sign i { font: 600 22px var(--font); font-style: normal; color: var(--night-ink); white-space: nowrap; }
+
+/* 1 기록: 연도별 종이 조각(왼쪽 세로). 출처마다 원래 생김새를 살린다 */
+.scene[data-scene="8"] .s8-scraps { position: absolute; left: 40px; top: 80px; width: 440px; display: flex; flex-direction: column; gap: 9px; }
+.scene[data-scene="8"] .s8-scrap { position: relative; opacity: 0; translate: 0 10px; transition: opacity 500ms ease, translate 500ms var(--ease); }
+.scene[data-scene="8"] .s8-scrap.on { opacity: 1; translate: 0 0; }
+/* 연도: 모든 조각의 머리에 같은 모양으로 */
+.scene[data-scene="8"] :is(.s8-cut th) > span, .scene[data-scene="8"] .s8-two .plan-h b { margin-right: 8px; font: 700 18px var(--mono); }
+
+/* 2022 위키 화면: 최근 수정 시각이 머리에 */
+.scene[data-scene="8"] .s8-wk { padding: 0 22px 14px; }
+.scene[data-scene="8"] .s8-wk .wk-h { display: flex; gap: 12px; margin: 0 -22px 10px; padding: 8px 16px; background: var(--screen-line); font: 600 15px var(--font); color: var(--screen-soft); }
+.scene[data-scene="8"] .s8-wk .wk-h span:first-child { font-weight: 800; color: var(--screen-ink); }
+.scene[data-scene="8"] .s8-wk h3 { margin: 0 0 4px; padding-bottom: 4px; border-bottom: 1px solid var(--screen-line); font: 800 24px var(--font); color: var(--screen-ink); }
+.scene[data-scene="8"] .s8-wk p { margin: 0; font: 500 16px/1.5 var(--font); color: var(--screen-soft); }
+.scene[data-scene="8"] .s8-wk p b { margin-left: 6px; font: 700 19px var(--mono); color: var(--screen-ink); }
+
+/* 2023 · 2024 오린 계획서 표 */
+.scene[data-scene="8"] .s8-cut { padding: 20px 18px 10px; }
+.scene[data-scene="8"] .s8-cut th { padding: 6px 12px; }
+.scene[data-scene="8"] .s8-cut td { padding: 6px 12px; text-align: left; font-size: 19px; }
+/* 2024: ALPS 자리만 비어 있다 */
+.scene[data-scene="8"] .s8-list td.gap { display: flex; align-items: center; justify-content: space-between; margin: 6px 0 2px; padding: 3px 12px; border: 2px dashed #8a96ad; border-radius: 3px; }
+.scene[data-scene="8"] .s8-list td.gap span { font: 800 19px var(--font); color: #9aa3b4; letter-spacing: .02em; }
+.scene[data-scene="8"] .s8-list td.gap em { font: 600 15px var(--font); font-style: normal; color: #6d7890; }
+
+/* 2024 목록: 다른 동아리는 회색 막대(이름 없이) */
+.scene[data-scene="8"] .s8-list td.bars { display: flex; gap: 8px; padding: 10px 12px; }
+.scene[data-scene="8"] .s8-list td.bars i { flex: 1; height: 12px; border-radius: 2px; background: #c3cad6; }
+
+/* 2025 두 문서 대조: 현황 표 20개(ALPS 있음) vs 연간 계획 17개(ALPS 없음) */
+.scene[data-scene="8"] .s8-two { padding: 10px 18px 12px; }
+.scene[data-scene="8"] .s8-two .plan-h { margin-bottom: 8px; font: 600 15px var(--font); }
+.scene[data-scene="8"] .s8-two .plan-h b { color: var(--paper-ink); }
+.scene[data-scene="8"] .s8-docs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.scene[data-scene="8"] .s8-docs > div { display: grid; grid-template-columns: auto 1fr; align-items: baseline; column-gap: 10px; padding: 6px 10px; border: 1px solid color-mix(in srgb, var(--paper-ink) 30%, transparent); }
+.scene[data-scene="8"] .s8-docs small { grid-column: 1 / -1; font: 600 14px var(--font); color: var(--paper-soft); }
+.scene[data-scene="8"] .s8-docs b { font: 800 28px var(--font); color: var(--paper-ink); }
+.scene[data-scene="8"] .s8-docs em { font: 700 17px var(--font); font-style: normal; }
+.scene[data-scene="8"] .s8-docs em.in { color: var(--paper-ink); }
+.scene[data-scene="8"] .s8-docs em.out { color: var(--red); }
+.scene[data-scene="8"] .s8-gapnote { margin: 8px 0 0; font: 700 17px var(--font); color: var(--red); }
+
+
+/* 2 분석: 점 하나 = 한 명 / 한 건 */
+.scene[data-scene="8"] .s8-stat { position: absolute; left: 40px; top: 92px; width: 920px; text-shadow: var(--s8-shadow); }
+.scene[data-scene="8"] .s8-stat h3 { margin: 0 0 10px; font: 800 28px var(--font); color: var(--night-ink); }
+.scene[data-scene="8"] .s8-stat h3.h2 { margin-top: 30px; }
+.scene[data-scene="8"] .s8-row { display: flex; align-items: center; gap: 18px; padding: 7px 0; }
+.scene[data-scene="8"] .s8-row > span { width: 230px; font: 600 22px var(--font); color: var(--night-ink); white-space: nowrap; }
+.scene[data-scene="8"] .s8-dots { display: flex; flex-wrap: wrap; gap: 6px; width: 520px; }
+.scene[data-scene="8"] .s8-dots i { width: 20px; height: 20px; border-radius: 50%; }
+.scene[data-scene="8"] .s8-dots i.g { background: var(--gbs); box-shadow: 0 0 8px color-mix(in srgb, var(--gbs) 60%, transparent); }
+.scene[data-scene="8"] .s8-dots i.h { background: var(--hanmin); box-shadow: 0 0 8px color-mix(in srgb, var(--hanmin) 60%, transparent); }
+.scene[data-scene="8"] .s8-row b { font: 800 38px/1 var(--font); }
+.scene[data-scene="8"] .s8-row b small { font-size: 20px; margin-left: 3px; color: var(--night-soft); }
+.scene[data-scene="8"] .s8-row b.g { color: var(--gbs); }
+.scene[data-scene="8"] .s8-row b.h { color: var(--hanmin); }
+.scene[data-scene="8"] .s8-stat .src { display: block; margin-top: 4px; font: 500 13px var(--font); color: var(--night-faint); }
+/* 점이 하나씩 켜진다 */
+.scene[data-scene="8"] .s8-stat.on .s8-dots i { animation: s8-dot 300ms var(--ease) both; animation-delay: calc(var(--k) * 35ms + 300ms); }
+@keyframes s8-dot { from { opacity: 0; transform: scale(.3); } }
+.no-motion .scene[data-scene="8"] .s8-dots i { animation: none !important; }
+
+.scene[data-scene="8"] .s8-concl { position: absolute; left: 40px; top: 640px; display: flex; flex-direction: column; gap: 6px; text-shadow: var(--s8-shadow); }
+.scene[data-scene="8"] .s8-concl span { font: 600 24px var(--font); color: var(--night-soft); }
+.scene[data-scene="8"] .s8-concl b { font: 800 38px var(--font); color: var(--lamp); }
+
+/* 2 분석: 수상 게시물 연도 (두 학교 숫자 비교 대신) */
+.scene[data-scene="8"] .s8-years { display: flex; gap: 12px; margin: 6px 0 8px; }
+.scene[data-scene="8"] .s8-years i { font: 800 30px/1 var(--font); font-style: normal; color: var(--gbs); padding: 12px 16px; border: 2px solid var(--gbs); border-radius: 4px; box-shadow: 0 0 10px color-mix(in srgb, var(--gbs) 45%, transparent); }
+.scene[data-scene="8"] .s8-years i.no { color: var(--night-faint); border-color: var(--night-faint); border-style: dashed; box-shadow: none; }
+.scene[data-scene="8"] .s8-stat.on .s8-years i { animation: s8-dot 300ms var(--ease) both; animation-delay: calc(var(--k) * 90ms + 300ms); }
+.scene[data-scene="8"] .s8-note { margin: 4px 0 6px; font: 700 30px var(--font); color: var(--night-ink); }
+.no-motion .scene[data-scene="8"] .s8-years i { animation: none !important; }

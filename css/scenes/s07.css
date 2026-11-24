@@ -1,0 +1,117 @@
+/* 장면 7: 한 사람에게 묶인 선 */
+.scene[data-scene="7"] { --s7-shadow: 0 1px 12px rgb(0 0 0 / 95%); }
+.scene[data-scene="7"] .s7-colh { font: 600 20px var(--font); color: var(--night-soft); margin-bottom: 14px; text-shadow: var(--s7-shadow); }
+.scene[data-scene="7"] .s7-colh .sch { color: var(--night-ink); font-size: 22px; }
+
+/* 실(분석) */
+.scene[data-scene="7"] .s7-dyn { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.scene[data-scene="7"] .s7-dyn path { stroke-width: 2; stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1100ms var(--ease) var(--d, 0ms), opacity 500ms; }
+/* 지금 단계의 실만 그린다. 다음 단계 실이 미리 다 그려져 있으면 넘어갈 때 나타났다 거둬졌다 다시 그려진다 */
+.scene[data-scene="7"].s7-draw[data-sub="1"] .s7-g1 path, .scene[data-scene="7"].s7-draw[data-sub="2"] .s7-g2 path { stroke-dashoffset: 0; }
+.scene[data-scene="7"].s7-still .s7-dyn path { transition: none; }
+.scene[data-scene="7"] .s7-g1, .scene[data-scene="7"] .s7-g2 { opacity: 0; transition: opacity 500ms; }
+.scene[data-scene="7"][data-sub="1"] .s7-g1, .scene[data-scene="7"][data-sub="2"] .s7-g2 { opacity: 1; }
+
+/* 1 한민고 업무 6개(오른쪽 위, 산 위 어두운 하늘) */
+.scene[data-scene="7"] .s7-tasks { position: absolute; left: 640px; top: 92px; width: 330px; }
+.scene[data-scene="7"] .s7-task { font: 700 24px/1 var(--font); color: var(--night-ink); padding: 12px 0; text-shadow: var(--s7-shadow); }
+.scene[data-scene="7"] .s7-pl { display: flex; flex-direction: column; align-items: center; padding-bottom: 70px; color: var(--lamp); text-shadow: var(--s7-shadow); }
+.scene[data-scene="7"] .s7-pl::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 1px; height: 64px; background: currentColor; opacity: .75; }
+.scene[data-scene="7"] .s7-pl b { font: 800 30px var(--font); white-space: nowrap; }
+
+/* 1 경기북과학고: 업무 4개 → 부서 4곳(왼쪽 위, 작게) */
+.scene[data-scene="7"] .s7-gbs { position: absolute; left: 40px; top: 92px; width: 560px; }
+.scene[data-scene="7"] .s7-grow { display: flex; align-items: center; gap: 12px; padding: 7px 0; font: 600 21px var(--font); text-shadow: var(--s7-shadow); }
+.scene[data-scene="7"] .s7-grow span { width: 168px; color: var(--night-ink); white-space: nowrap; }
+.scene[data-scene="7"] .s7-grow i { width: 38px; height: 2px; background: var(--gbs); box-shadow: 0 0 8px var(--gbs); }
+.scene[data-scene="7"] .s7-grow b { color: var(--gbs); font-weight: 700; white-space: nowrap; }
+.scene[data-scene="7"] .s7-gbs .src { display: block; margin-top: 12px; font: 500 13px var(--font); color: var(--night-faint); }
+
+/* 2 기록: 2019 교육계획서 */
+.scene[data-scene="7"] .s7-plan { left: 550px; top: 92px; width: 400px; }
+.scene[data-scene="7"] .s7-plan td { text-align: left; padding: 11px 12px; font-size: 20px; }
+/* 2 교사 수 연표: 축 위 해마다 점, 연도는 점 위 · 인원은 점 아래 가운데 */
+.scene[data-scene="7"] .s7-tl { position: absolute; left: 40px; top: 96px; width: 470px; height: 140px; text-shadow: var(--s7-shadow); }
+.scene[data-scene="7"] .s7-tl::before { content: ""; position: absolute; left: 40px; width: 360px; top: 37px; height: 2px; background: var(--night-faint); }
+.scene[data-scene="7"] .s7-node { position: absolute; top: 0; left: var(--x); transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; }
+.scene[data-scene="7"] .s7-node::before { content: ""; position: absolute; left: 50%; top: 32px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: var(--night-ink); box-shadow: 0 0 0 3px rgb(0 0 0 / 55%); }
+.scene[data-scene="7"] .s7-node.n21::before { background: var(--lamp); }
+.scene[data-scene="7"] .s7-node small { font: 500 20px/24px var(--mono); color: var(--night-soft); }
+.scene[data-scene="7"] .s7-node b { font: 800 34px/1 var(--font); color: var(--night-ink); margin-top: 26px; }
+.scene[data-scene="7"] .s7-node.n21 b { color: var(--lamp); }
+.scene[data-scene="7"] .s7-node em { font: 600 20px var(--font); font-style: normal; color: var(--ai); white-space: nowrap; position: absolute; right: -14px; top: 104px; }
+/* 2019~2020: 한 명뿐이던 구간(붉은 실 대상) = 축 그 구간을 붉게 */
+.scene[data-scene="7"] .s7-span { position: absolute; left: 40px; width: 180px; top: 36px; height: 4px; border-radius: 2px; background: var(--red); }
+/* 2 분석: 두 교사 */
+.scene[data-scene="7"] .s7-two { position: absolute; left: 40px; top: 246px; width: 470px; display: flex; gap: 30px; text-shadow: var(--s7-shadow); }
+.scene[data-scene="7"] .s7-two > div { flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.scene[data-scene="7"] .s7-two .figure-person { transform: scale(1.5); transform-origin: left bottom; margin: 18px 0 4px 4px; }
+.scene[data-scene="7"] .s7-tA .figure-person { color: var(--hanmin); }
+.scene[data-scene="7"] .s7-tB .figure-person { color: var(--ai); }
+.scene[data-scene="7"] .s7-two b { font: 800 26px var(--font); }
+.scene[data-scene="7"] .s7-tA b { color: var(--hanmin); }
+.scene[data-scene="7"] .s7-tB b { color: var(--ai); }
+.scene[data-scene="7"] .s7-two p { margin: 0; font: 600 21px/1.5 var(--font); color: var(--night-ink); }
+
+/* 3 꺼진 라운지 */
+
+/* 4 터미널 */
+.scene[data-scene="7"] .s7-term { position: absolute; left: 40px; top: 96px; width: 920px; background: color-mix(in srgb, var(--night-2) 94%, transparent); border: 1px solid var(--night-3); box-shadow: 0 24px 50px rgb(0 0 0 / 55%); }
+.scene[data-scene="7"] .s7-term-bar { padding: 8px 18px; font: 500 20px var(--mono); color: var(--night-faint); border-bottom: 1px solid var(--night-3); }
+.scene[data-scene="7"] .s7-term-body { padding: 18px 22px 22px; min-height: 250px; font: 500 22px/1.75 var(--mono); color: var(--night-ink); white-space: pre; }
+.scene[data-scene="7"] .s7-term-body .cmd b { color: var(--glow); font-weight: 600; }
+.scene[data-scene="7"] .s7-term-body .out { color: var(--night-soft); }
+.scene[data-scene="7"] .s7-term-body em { font-style: normal; color: var(--lamp); }
+.scene[data-scene="7"] .s7-term-body mark { background: var(--lamp); color: var(--night); padding: 0 4px; }
+.scene[data-scene="7"] .s7-term-body .cur { display: inline-block; width: .6em; height: 1.05em; vertical-align: -3px; background: var(--night-ink); animation: blink 1s steps(1) infinite; }
+/* 4 2년의 틈 */
+.scene[data-scene="7"] .s7-gap { position: absolute; left: 80px; top: 470px; width: 840px; height: 200px; }
+.scene[data-scene="7"] .s7-axis { position: absolute; left: 0; right: 0; top: 110px; height: 2px; background: var(--night-faint); }
+.scene[data-scene="7"] .s7-y { position: absolute; left: calc(var(--x) * 200px); top: 124px; transform: translateX(-50%); font: 500 20px var(--mono); color: var(--night-soft); }
+.scene[data-scene="7"] .s7-m { position: absolute; left: calc(var(--x) * 200px); top: 0; transform: translateX(-50%); display: flex; flex-direction: column-reverse; align-items: center; gap: 8px; text-align: center; }
+.scene[data-scene="7"] .s7-m i { width: 16px; height: 16px; border-radius: 50%; margin-top: 2px; }
+.scene[data-scene="7"] .s7-m span { font: 600 20px var(--font); color: var(--night-soft); display: flex; flex-direction: column; }
+.scene[data-scene="7"] .s7-m b { font: 800 26px var(--font); white-space: nowrap; }
+.scene[data-scene="7"] .s7-m.real { top: 37px; }
+.scene[data-scene="7"] .s7-m.real i { background: var(--glow); box-shadow: 0 0 12px var(--glow); }
+.scene[data-scene="7"] .s7-m.real b { color: var(--glow); }
+.scene[data-scene="7"] .s7-m.paper-m { top: 37px; }
+.scene[data-scene="7"] .s7-m.paper-m i { background: var(--paper); }
+.scene[data-scene="7"] .s7-m.paper-m b { color: var(--paper); }
+.scene[data-scene="7"] .s7-br { position: absolute; left: 200px; width: 400px; top: 162px; height: 16px; border: 2px solid var(--red); border-top: 0; }
+.scene[data-scene="7"] .s7-br span { position: absolute; left: 50%; top: 20px; transform: translateX(-50%); font: 800 26px var(--font); color: var(--red); }
+
+/* 3 꺼진 라운지: 왼쪽 창 바로 아래 벽에 테이프로 붙인 공책 쪽지(3장 '나의 경험'과 같은 공책, 위가 찢김) */
+.scene[data-scene="7"] .s7-pin { position: absolute; width: 0; height: 0; transition: left 120ms linear, top 120ms linear, opacity var(--t) ease, transform var(--t) var(--ease); }
+.scene[data-scene="7"] .s7-dark { left: -150px; top: 4px; width: 410px; box-sizing: border-box; padding-top: 22px; padding-bottom: 14px; box-shadow: none;
+  filter: drop-shadow(0 12px 18px rgb(0 0 0 / 55%)) drop-shadow(0 2px 3px rgb(0 0 0 / 35%));
+  clip-path: polygon(0 6px, 4% 1px, 9% 5px, 15% 0, 22% 6px, 29% 2px, 36% 7px, 44% 1px, 51% 5px, 58% 0, 66% 6px, 73% 2px, 81% 7px, 88% 1px, 94% 5px, 100% 2px, 100% 100%, 0 100%); }
+.scene[data-scene="7"] .s7-pin .cut-tape { left: 4px; top: -6px; transform: rotate(3deg); z-index: 3; }
+.scene[data-scene="7"] .s7-dark h4 { margin: 0; font: 700 15px/36px var(--font); color: var(--paper-soft); }
+.scene[data-scene="7"] .s7-dark p { margin: 0; font: 800 30px/36px var(--serif); }
+.scene[data-scene="7"] .s7-dark .src { margin-top: 0; line-height: 36px; }
+.scene[data-scene="7"] .s7-dark > .ex-no { top: 10px; }
+
+/* 3 분석: 교육행정 조직의 원리 두 줄(보고서 Ⅳ-3). 분업 ✓, 조정 ✕ */
+.scene[data-scene="7"] .s7-coord { position: absolute; left: 40px; top: 110px; width: 430px; text-shadow: 0 1px 10px rgb(0 0 0 / 90%); }
+.scene[data-scene="7"] .s7-coord > small { display: block; margin-bottom: 14px; font: 600 20px var(--font); color: var(--night-soft); }
+.scene[data-scene="7"] .s7-row { position: relative; padding: 14px 0 16px 58px; border-top: 1px solid color-mix(in srgb, var(--night-soft) 45%, transparent); }
+.scene[data-scene="7"] .s7-row > i { position: absolute; left: 0; top: 14px; width: 40px; height: 40px; display: grid; place-items: center; font: 800 26px var(--font); font-style: normal; border-radius: 50%; }
+.scene[data-scene="7"] .s7-row.ok > i { color: var(--glow); border: 2px solid var(--glow); }
+.scene[data-scene="7"] .s7-row.no > i { color: var(--red); border: 2px solid var(--red); }
+.scene[data-scene="7"] .s7-row b { display: block; font: 800 32px var(--font); color: var(--night-ink); }
+.scene[data-scene="7"] .s7-row span { display: block; margin-top: 4px; font: 500 21px/1.4 var(--font); color: var(--night-soft); }
+.scene[data-scene="7"] .s7-row em { display: block; margin-top: 8px; font: 700 23px var(--font); font-style: normal; }
+.scene[data-scene="7"] .s7-row.ok em { color: var(--glow); }
+.scene[data-scene="7"] .s7-row.no em { color: var(--red); }
+
+/* 7-3 순서: 분업 줄 → 조정 줄 → 조정 ✕ 판정 → (라운지 소등) → 쪽지가 붙는다 */
+.scene[data-scene="7"] .s7-coord > *, .scene[data-scene="7"] .s7-row.no em, .scene[data-scene="7"] .s7-row.no > i { opacity: 0; translate: 0 10px; transition: opacity 420ms ease, translate 520ms var(--ease); }
+.scene[data-scene="7"].s7-c1 .s7-coord > small, .scene[data-scene="7"].s7-c1 .s7-row.ok,
+.scene[data-scene="7"].s7-c2 .s7-row.no, .scene[data-scene="7"].s7-c3 .s7-row.no em, .scene[data-scene="7"].s7-c3 .s7-row.no > i { opacity: 1; translate: 0 0; }
+.scene[data-scene="7"] .s7-dark, .scene[data-scene="7"] .s7-pin .cut-tape { opacity: 0; transition: opacity 140ms ease, transform 280ms cubic-bezier(.3, 1.5, .55, 1); }
+.scene[data-scene="7"] .s7-dark { transform: translateY(-14px) rotate(calc(var(--rot) - 5deg)) scale(1.12); }
+.scene[data-scene="7"] .s7-pin .cut-tape { transform: translateY(-10px) rotate(3deg); transition-delay: 120ms; }
+.scene[data-scene="7"].s7-stick .s7-dark { opacity: 1; transform: rotate(var(--rot)); }
+.scene[data-scene="7"].s7-stick .s7-pin .cut-tape { opacity: 1; transform: rotate(3deg); }
+.scene[data-scene="7"].s7-still :is(.s7-coord > *, .s7-row.no em, .s7-row.no > i), .scene[data-scene="7"].s7-still .s7-dark, .scene[data-scene="7"].s7-still .s7-pin .cut-tape { transition: none !important; }

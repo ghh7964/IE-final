@@ -1,0 +1,37 @@
+/* 장면 1: 제목 → 질문 (새벽빛 현장 위) */
+
+/* 제목: 하늘과 산등성이 자리(두 학교는 화면 아래쪽 양옆에 있다) */
+.scene[data-scene="1"] .s1-title { position: absolute; left: 0; right: 0; top: 108px; text-align: center; text-shadow: 0 2px 24px rgb(0 0 0 / 70%); }
+.scene[data-scene="1"] .s1-title h1 { margin: 0; font: 800 58px/1.24 var(--font); letter-spacing: -.04em; color: var(--night-ink); }
+.scene[data-scene="1"] .s1-subt { margin: 24px 0 0; font: 500 25px/1.6 var(--font); color: var(--night-ink); }
+.scene[data-scene="1"] .s1-subt .sch { box-shadow: inset 0 -4px 0 var(--c); }
+.scene[data-scene="1"] .s1-author { margin: 22px 0 0; font: 600 24px var(--font); color: var(--night-soft); }
+
+/* 두 학교의 실제 자리: 지시선 + 학교 이름(부제와 같은 색 밑줄) */
+.scene[data-scene="1"] .s1-pl { display: flex; flex-direction: column; align-items: center; gap: 2px; padding-bottom: 54px; text-shadow: 0 1px 10px rgb(0 0 0 / 95%); }
+.scene[data-scene="1"] .s1-pl::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 1px; height: 46px; background: var(--c); }
+.scene[data-scene="1"] .s1-pl b { font: 700 24px var(--font); color: var(--night-ink); box-shadow: inset 0 -3px 0 var(--c); }
+.scene[data-scene="1"] .s1-pl i { font: 500 18px var(--font); font-style: normal; color: var(--night-soft); }
+.scene[data-scene="1"] .s1-pl-h { --c: var(--hanmin); }
+.scene[data-scene="1"] .s1-pl-g { --c: var(--gbs); }
+
+/* 질문: 제목이 물러난 뒤에 들어온다 */
+.scene[data-scene="1"] .s1-q { position: absolute; left: 0; right: 0; top: 230px; text-align: center; }
+.scene[data-scene="1"] .s1-q.on { transition-delay: 450ms; }
+.scene[data-scene="1"] .s1-q h2 { margin: 0; font: 800 54px/1.35 var(--font); letter-spacing: -.04em; color: var(--night-ink); text-shadow: 0 2px 24px rgb(0 0 0 / 80%); }
+.scene[data-scene="1"] .s1-q em { font-style: normal; color: var(--lamp); }
+
+.scene[data-scene="1"] .s1-hands { margin-top: 56px; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.scene[data-scene="1"] .s1-ask { margin: 0; font: 500 26px var(--font); color: var(--night-soft); }
+.scene[data-scene="1"] .s1-hands.has .s1-ask { display: none; }
+.scene[data-scene="1"] .s1-count { display: none; align-items: baseline; gap: 10px; }
+.scene[data-scene="1"] .s1-hands.has .s1-count { display: flex; }
+.scene[data-scene="1"] .s1-num { font: 800 112px/1 var(--font); letter-spacing: -.04em; color: var(--lamp); }
+.scene[data-scene="1"] .s1-unit { font: 700 34px var(--font); color: var(--night-ink); }
+.scene[data-scene="1"] .s1-figs { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; max-width: 900px; }
+.scene[data-scene="1"] .s1-figs .figure-person { color: var(--night-soft); animation: s1-pop 320ms var(--ease) both; animation-delay: calc(var(--k) * 18ms); }
+.scene[data-scene="1"] .s1-figs em { font: 700 26px var(--font); font-style: normal; color: var(--night-soft); align-self: center; }
+@keyframes s1-pop { from { opacity: 0; transform: translateY(8px); } }
+
+.scene[data-scene="1"].s1-still .s1-figs .figure-person { animation: none; }
+.scene[data-scene="1"].s1-still .s1-q.on { transition-delay: 0s; }

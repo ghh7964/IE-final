@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<link rel="icon" href="data:," />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>발표자 창</title>
+<link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<style>
+  :root { --bg:#10161f; --panel:#1a2230; --ink:#e8edf5; --soft:#9aa6b8; --accent:#7fe3d6; --warn:#f0a25a; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:"Pretendard",system-ui,sans-serif; height:100vh; display:grid; grid-template-rows:auto 1fr auto; }
+  header { display:flex; align-items:center; gap:24px; padding:14px 24px; background:var(--panel); }
+  .clock { font:700 34px ui-monospace,Menlo,monospace; letter-spacing:.02em; }
+  .clock small { font-size:14px; color:var(--soft); margin-left:6px; }
+  .pos { color:var(--soft); font-size:15px; }
+  .pos b { color:var(--ink); font-size:20px; }
+  .bar { flex:1; height:6px; background:#263044; border-radius:3px; overflow:hidden; }
+  .bar span { display:block; height:100%; background:var(--accent); width:0; }
+  main { display:grid; grid-template-columns: 2fr 1fr; gap:18px; padding:18px 24px; min-height:0; }
+  .now, .next { background:var(--panel); border-radius:12px; padding:20px 24px; overflow:auto; }
+  .loc { color:var(--accent); font-weight:700; font-size:15px; margin-bottom:10px; }
+  .opt { color:var(--warn); font-size:13px; margin-left:8px; }
+  .notes { font-size:27px; line-height:1.6; white-space:pre-wrap; }
+  .next .notes { font-size:17px; color:var(--soft); }
+  .next h3 { margin:0 0 10px; font-size:13px; color:var(--soft); letter-spacing:.08em; }
+  footer { display:flex; gap:10px; padding:12px 24px 18px; align-items:center; }
+  button { background:#263044; color:var(--ink); border:0; border-radius:8px; padding:10px 18px; font:inherit; font-size:15px; cursor:pointer; }
+  button:hover { background:#31405a; }
+  .hint { color:var(--soft); font-size:13px; margin-left:auto; }
+  .over { color:var(--warn); }
+  .ahead { color:var(--accent); }
+  #short.on { background:var(--warn); color:#10161f; font-weight:700; }
+</style>
+</head>
+<body>
+<header>
+  <div class="clock" id="elapsed">0:00<small>경과</small></div>
+  <div class="clock" id="remain" style="font-size:22px">10:00<small>남음</small></div>
+  <div class="clock" id="pace" style="font-size:22px">–<small>목표 대비</small></div>
+  <button id="short" title="S">단축 모드 꺼짐</button>
+  <div class="bar"><span id="bar"></span></div>
+  <div class="pos"><b id="idx">–</b> / <span id="tot">–</span></div>
+</header>
+<main>
+  <section class="now"><div class="loc" id="loc"></div><div class="notes" id="notes">본 화면을 열면 여기에 대본이 나옵니다.</div></section>
+  <section class="next"><h3>다음</h3><div class="loc" id="nloc"></div><div class="notes" id="nnotes"></div></section>
+</main>
+<footer>
+  <button id="prev">← 이전</button><button id="next">다음 →</button><button id="reset">타이머 초기화</button>
+  <span class="hint">타이머는 첫 '다음'에서 시작 · 목표 10:00 · '목표 대비'는 대본 속도 기준(+면 늦음) · ←/→, S 단축 모드</span>
+</footer>
+<script>
+  const ch = new BroadcastChannel("edu-final-deck");
+  const LIMIT = 10 * 60;
+  let t0 = null, target = null;
+  const $ = (id) => document.getElementById(id);
+  const fmt = (s) => `${s < 0 ? "-" : ""}${Math.floor(Math.abs(s) / 60)}:${String(Math.floor(Math.abs(s) % 60)).padStart(2, "0")}`;
+  setInterval(() => {
+    const el = t0 ? (Date.now() - t0) / 1000 : 0;
+    $("elapsed").firstChild.nodeValue = fmt(el);
+    $("remain").firstChild.nodeValue = fmt(LIMIT - el);
+    $("remain").classList.toggle("over", el > LIMIT);
+    if (t0 && target != null) {
+      const d = el - target;   // +면 늦음, −면 여유
+      $("pace").firstChild.nodeValue = (d > 0 ? "+" : "−") + fmt(Math.abs(d)).replace("-", "");
+      $("pace").className = "clock " + (d > 15 ? "over" : d < -5 ? "ahead" : "");
+    }
+  }, 250);
+  ch.onmessage = ({ data }) => {
+    if (data?.type !== "state") return;
+    if (!t0 && data.index > 0) t0 = Date.now();   // 본 화면에서 클리커로 넘겨도 타이머 시작
+    $("idx").textContent = data.index + 1; $("tot").textContent = data.total;
+    $("bar").style.width = `${((data.index + 1) / data.total) * 100}%`;
+    $("loc").innerHTML = `${data.id} · ${data.loc}${data.opt ? '<span class="opt">★ 시간 부족하면 생략</span>' : ""}`;
+    $("notes").textContent = data.notes || "";
+    target = data.target;
+    $("short").textContent = data.short ? `단축 모드 켜짐 · ★ 건너뜀 (예상 ${fmt(data.total_target)})` : `단축 모드 꺼짐 (예상 ${fmt(data.total_target)})`;
+    $("short").classList.toggle("on", !!data.short);
+    $("nloc").textContent = data.next ? `${data.next.id} · ${data.next.loc}` : "끝";
+    $("nnotes").textContent = data.next?.notes || "";
+  };
+  const cmd = (c, extra = {}) => { if (c === "next" && !t0) t0 = Date.now(); ch.postMessage({ type: "cmd", cmd: c, ...extra }); };
+  $("next").onclick = () => cmd("next");
+  $("prev").onclick = () => cmd("prev");
+  $("reset").onclick = () => { t0 = null; };
+  $("short").onclick = () => cmd("short");
+  addEventListener("keydown", (e) => {
+    if (["ArrowRight", "PageDown", " "].includes(e.key)) { e.preventDefault(); cmd("next"); }
+    if (["ArrowLeft", "PageUp"].includes(e.key)) { e.preventDefault(); cmd("prev"); }
+    if (e.key === "s" || e.key === "S") cmd("short");
+  });
+  cmd("hello");
+</script>
+</body>
+</html>

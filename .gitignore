@@ -1,0 +1,7 @@
+# 작업 메모·도구·로그는 올리지 않는다(발표에 필요한 파일만)
+*.md
+tools/
+video/*.log
+world_test.html
+build.py
+.DS_Store

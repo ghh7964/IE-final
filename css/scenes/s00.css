@@ -1,0 +1,12 @@
+/* 장면 0: 콜드 오픈 — 밤의 교사동, 남은 불 하나 */
+
+/* 페이지를 막 연 상태: 검은 화면(장소·시각 자막만). 첫 →에 3초 동안 걷힌다 */
+.scene[data-scene="0"] .s0-black { position: absolute; inset: -200px; background: #000; opacity: 0; transition: opacity 3000ms ease; }
+.scene[data-scene="0"].s0-dark .s0-black { opacity: 1; transition: none; }
+
+/* 자막: 카메라가 창에 닿은 뒤 */
+.scene[data-scene="0"] .s0-sub { position: absolute; left: 0; right: 0; bottom: 130px; margin: 0; font-size: 46px; opacity: 0; transition: opacity 1100ms ease; }
+.scene[data-scene="0"].s0-subon .s0-sub { opacity: 1; }
+
+.scene[data-scene="0"].s0-still .s0-black,
+.scene[data-scene="0"].s0-still .s0-sub { transition: none; }

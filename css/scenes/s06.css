@@ -1,0 +1,84 @@
+/* 장면 6: 밤의 교실 (기준 장면) */
+
+/* 1 시계: 현장의 시각. 크게, 숫자만 */
+.scene[data-scene="6"] .s6-clock { position: absolute; right: 56px; top: 26px; font: 500 64px/1 var(--mono); color: var(--night-ink); text-shadow: 0 2px 20px rgb(0 0 0 / 80%); letter-spacing: -.02em; }
+.scene[data-scene="6"].s6-after9 .s6-clock { color: var(--lamp); }
+
+/* 3D 위치 라벨: 가는 지시선 + 이름 + 설명 */
+.scene[data-scene="6"] .s6-pl { display: flex; flex-direction: column; align-items: center; gap: 2px; padding-bottom: 46px; text-align: center; text-shadow: 0 1px 10px rgb(0 0 0 / 95%); }
+.scene[data-scene="6"] .s6-pl::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 1px; height: 40px; background: currentColor; opacity: .7; }
+.scene[data-scene="6"] .s6-pl b { font: 700 24px var(--font); }
+.scene[data-scene="6"] .s6-pl i { font: 500 18px var(--font); font-style: normal; color: var(--night-soft); }
+.scene[data-scene="6"] .s6-pl-teach { color: var(--night-ink); transition: opacity 600ms; }
+.scene[data-scene="6"].s6-late .s6-pl-teach { opacity: .6; }
+.scene[data-scene="6"] .s6-pl-dorm { color: var(--night-ink); opacity: 0; transition: opacity 700ms; }
+.scene[data-scene="6"].s6-after9 .s6-pl-dorm { opacity: 1; }
+.scene[data-scene="6"] .s6-pl-lounge { color: var(--lamp); padding-bottom: 70px; }
+.scene[data-scene="6"] .s6-pl-lounge::after { height: 64px; }
+.scene[data-scene="6"] .s6-pl-lounge b { font-size: 30px; }
+.scene[data-scene="6"] .s6-pl-lounge i { color: var(--lamp); opacity: .85; }
+.scene[data-scene="6"] .s6-pl-gbs { color: var(--gbs); padding-bottom: 70px; }
+.scene[data-scene="6"] .s6-pl-gbs::after { height: 64px; }
+.scene[data-scene="6"] .s6-pl-gbs b { font-size: 30px; }
+
+/* 2 게시판 공지(기록) */
+.scene[data-scene="6"] .s6-note { width: 470px; }
+.scene[data-scene="6"] .s6-note p { margin: 0; font: 600 27px/1.6 var(--serif); }
+.scene[data-scene="6"] .s6-note-a { left: 56px; top: 210px; }
+.scene[data-scene="6"] .s6-note-b { left: 96px; top: 470px; width: 420px; }
+.scene[data-scene="6"] .s6-note mark { background: none; color: inherit; box-shadow: inset 0 -4px 0 var(--red); }
+.scene[data-scene="6"] .s6-an { position: absolute; inset: 0; width: 100%; height: 100%; }
+.scene[data-scene="6"] .s6-al { left: 700px; display: flex; flex-direction: column; gap: 4px; white-space: normal; width: 260px; }
+.scene[data-scene="6"] .s6-al b { font: 800 34px var(--font); }
+.scene[data-scene="6"] .s6-al span { font: 500 20px/1.4 var(--font); color: var(--night-ink); }
+.scene[data-scene="6"] .s6-al-1 { top: 300px; }
+.scene[data-scene="6"] .s6-al-2 { top: 530px; }
+
+/* 3 도구 사다리(분석) */
+.scene[data-scene="6"] .s6-ladder { position: absolute; left: 60px; top: 150px; width: 880px; height: 440px; }
+.scene[data-scene="6"] .s6-ladder svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.scene[data-scene="6"] .s6-stair { stroke-width: 3; }
+.scene[data-scene="6"] .s6-rung { position: absolute; display: flex; flex-direction: column; gap: 4px; text-shadow: 0 1px 10px rgb(0 0 0 / 90%); }
+.scene[data-scene="6"] .s6-rung b { font: 800 32px var(--font); color: var(--night-ink); }
+.scene[data-scene="6"] .s6-rung small { font: 500 18px var(--mono); color: var(--night-soft); }
+.scene[data-scene="6"] .s6-rung.r1 { left: 30px; top: 318px; }
+.scene[data-scene="6"] .s6-rung.r2 { left: 310px; top: 188px; }
+.scene[data-scene="6"] .s6-rung.r3 { left: 590px; top: 58px; }
+.scene[data-scene="6"] .s6-who { position: absolute; left: 620px; top: 300px; display: flex; align-items: center; gap: 12px; font: 600 22px var(--font); color: var(--lamp); }
+.scene[data-scene="6"] .s6-who .figure-person { color: var(--hanmin); }
+.scene[data-scene="6"] .s6-pair { position: absolute; left: 60px; right: 56px; top: 596px; display: flex; flex-direction: column; gap: 10px; font: 500 22px var(--font); color: var(--night-soft); }
+.scene[data-scene="6"] .s6-pair b { color: var(--night-ink); font-weight: 800; }
+
+/* 4 경기북과학고 정보 2실: 세미나 주제 사다리(분석) + 진행자 */
+.scene[data-scene="6"] .s6-sem { position: absolute; left: 520px; top: 350px; width: 420px; height: 330px; }
+.scene[data-scene="6"] .s6-sem svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.scene[data-scene="6"] .s6-sem .holo { stroke: var(--gbs); filter: drop-shadow(0 0 5px color-mix(in srgb, var(--gbs) 70%, transparent)); }
+.scene[data-scene="6"] .s6-sem .t { position: absolute; font: 700 22px var(--font); color: var(--night-ink); text-shadow: 0 1px 10px rgb(0 0 0 / 95%); white-space: nowrap; }
+.scene[data-scene="6"] .s6-sem .t1 { left: 40px; top: 262px; }
+.scene[data-scene="6"] .s6-sem .t2 { left: 130px; top: 200px; color: var(--night-soft); }
+.scene[data-scene="6"] .s6-sem .t3 { left: 150px; top: 140px; }
+.scene[data-scene="6"] .s6-sem .t4 { left: 205px; top: 86px; }
+.scene[data-scene="6"] .s6-sem .t5 { left: 190px; top: 40px; color: var(--gbs); font-size: 26px; }
+.scene[data-scene="6"] .s6-sem small { position: absolute; font: 500 18px var(--font); color: var(--night-soft); }
+.scene[data-scene="6"] .s6-sem .ax0 { left: 0; top: 304px; }
+.scene[data-scene="6"] .s6-sem .ax1 { right: 0; top: -6px; }
+.scene[data-scene="6"] .s6-lead { position: absolute; left: 60px; top: 520px; display: flex; align-items: center; gap: 14px; font: 500 30px var(--font); color: var(--night-soft); }
+.scene[data-scene="6"] .s6-lead b { color: var(--night-ink); font-weight: 800; }
+.scene[data-scene="6"] .s6-lead::after { content: ""; }
+.scene[data-scene="6"] .s6-stu { color: var(--gbs); transform: scale(1.3); margin-right: 6px; }
+.scene[data-scene="6"] .s6-lead { font-size: 30px; }
+.scene[data-scene="6"] .s6-lead em { font-style: normal; font-weight: 800; color: var(--gbs); font-size: 40px; }
+
+/* 라벨 겹침 정리: 교사동은 왼쪽으로 비켜 세우고(지시선 없음), 생활관은 더 높이 */
+.scene[data-scene="6"] .s6-pl-teach { margin-left: -300px; margin-top: -70px; padding-bottom: 0; align-items: flex-end; text-align: right; }
+.scene[data-scene="6"] .s6-pl-teach::after { display: none; }
+.scene[data-scene="6"] .s6-pl-teach .s6-after { display: none; }
+.scene[data-scene="6"].s6-after9 .s6-pl-teach .s6-before { display: none; }
+.scene[data-scene="6"].s6-after9 .s6-pl-teach .s6-after { display: inline; }
+.scene[data-scene="6"] .s6-pl-dorm { padding-bottom: 120px; }
+.scene[data-scene="6"] .s6-pl-dorm::after { height: 112px; }
+
+/* 4 분석: 협동학습이 아니라 자발적 동료학습(보고서 Ⅳ-2) */
+.scene[data-scene="6"] .s6-peer { position: absolute; left: 60px; top: 600px; display: flex; flex-direction: column; gap: 6px; text-shadow: 0 1px 10px rgb(0 0 0 / 90%); }
+.scene[data-scene="6"] .s6-peer b { font: 800 30px var(--font); color: var(--gbs); }
+.scene[data-scene="6"] .s6-peer span { font: 500 22px/1.4 var(--font); color: var(--night-ink); }

@@ -1,0 +1,56 @@
+/* 장면 5: 기록은 남아 있다 — 흐린 현장 위의 발광 점 120개 */
+
+.scene[data-scene="5"] .s5-total { position: absolute; left: 56px; top: 92px; text-shadow: 0 2px 16px rgb(0 0 0 / 90%); }
+.scene[data-scene="5"] .s5-big { font-size: 128px; color: var(--night-ink); display: inline-block; }
+.scene[data-scene="5"] .s5-big small { font-size: 48px; }
+.scene[data-scene="5"] .s5-total p { margin: 10px 0 0; font: 600 24px var(--font); color: var(--night-ink); }
+.scene[data-scene="5"] .s5-total .mix { margin-top: 6px; font-weight: 500; font-size: 22px; color: var(--night-soft); }
+
+/* 점 그래프 */
+.scene[data-scene="5"] .s5-chart { position: absolute; transform-origin: 50% 100%; transition: transform 800ms var(--ease), opacity 800ms ease; }
+.scene[data-scene="5"] .s5-chart.back { transform: translateY(60px) scale(.5); opacity: .75; }
+.scene[data-scene="5"] .s5-n, .scene[data-scene="5"] .s5-y, .scene[data-scene="5"] .s5-brace { transition: opacity 400ms; }
+.scene[data-scene="5"] .s5-chart.back :is(.s5-n, .s5-y, .s5-brace) { opacity: 0; }
+.scene[data-scene="5"] .s5-base { position: absolute; left: 0; right: 0; top: 320px; height: 0; border-top: 1px solid var(--night-faint); }
+.scene[data-scene="5"] .s5-dot {
+  position: absolute; width: 16px; height: 16px; border-radius: 50%;
+  background: var(--hanmin); box-shadow: 0 0 10px color-mix(in srgb, var(--hanmin) 80%, transparent);
+}
+.scene[data-scene="5"] .s5-chart.play .s5-dot { animation: s5-pop 380ms var(--ease) both; animation-delay: calc(var(--k) * 11ms + 200ms); }
+@keyframes s5-pop { from { opacity: 0; transform: translateY(-18px) scale(.4); } }
+.scene[data-scene="5"] .s5-n { position: absolute; transform: translateX(-50%); font: 800 22px var(--font); color: var(--night-ink); text-shadow: 0 1px 8px rgb(0 0 0 / 95%); }
+.scene[data-scene="5"] .s5-y { position: absolute; transform: translateX(-50%); font: 500 18px var(--mono); color: var(--night-soft); }
+.scene[data-scene="5"] .s5-chart.play .s5-n { animation: s5-fade 400ms ease both; animation-delay: 1.5s; }
+@keyframes s5-fade { from { opacity: 0; } }
+.scene[data-scene="5"] .s5-brace { position: absolute; top: 18px; height: 14px; border: 2px solid var(--ai); border-bottom: 0; }
+.scene[data-scene="5"] .s5-brace span { position: absolute; left: 0; bottom: calc(100% + 8px); white-space: nowrap; font: 600 20px var(--font); color: var(--ai); text-shadow: 0 1px 8px rgb(0 0 0 / 95%); }
+
+/* 2 교육과정 층위: 기울어진 반투명 판(분석 층) */
+.scene[data-scene="5"] .s5-layers { position: absolute; inset: 0; }
+.scene[data-scene="5"] .s5-layers[data-in].on { transition-delay: 450ms; }
+.scene[data-scene="5"] .s5-layer {
+  position: absolute; left: 130px; width: 740px; height: 72px; margin-top: 96px;
+  transform: skewX(-16deg);
+  background: rgb(5 8 14 / 60%); border: 1.5px solid var(--night-soft);
+}
+.scene[data-scene="5"] .s5-layer .in {
+  transform: skewX(16deg); height: 100%; display: flex; align-items: center; gap: 18px; padding: 0 30px;
+  white-space: nowrap;
+}
+.scene[data-scene="5"] .s5-layer b { font: 800 24px var(--font); color: var(--night-ink); min-width: 104px; }
+.scene[data-scene="5"] .s5-layer span { font: 500 22px var(--font); color: var(--night-soft); }
+.scene[data-scene="5"] .s5-layer em { margin-left: auto; font: 800 22px var(--font); font-style: normal; }
+.scene[data-scene="5"] .s5-layer.no { border: 2px dashed var(--red); }
+.scene[data-scene="5"] .s5-layer.no em { color: var(--red); }
+.scene[data-scene="5"] .s5-layer.yes {
+  border: 2px solid var(--lamp); background: color-mix(in srgb, var(--lamp) 18%, rgb(5 8 14 / 70%));
+  box-shadow: 0 0 26px color-mix(in srgb, var(--lamp) 45%, transparent);
+}
+.scene[data-scene="5"] .s5-layer.yes b, .scene[data-scene="5"] .s5-layer.yes span { color: var(--night-ink); }
+.scene[data-scene="5"] .s5-layer.yes em { color: var(--lamp); }
+.scene[data-scene="5"] .s5-layers.on .s5-layer { animation: s5-layer 520ms var(--ease) both; animation-delay: calc(var(--d) + 450ms); }
+@keyframes s5-layer { from { opacity: 0; transform: skewX(-16deg) translateY(-14px); } }
+.scene[data-scene="5"] .s5-drop { position: absolute; inset: 0; width: 100%; height: 100%; }
+.scene[data-scene="5"] .s5-drop path { stroke: var(--lamp); stroke-width: 2; stroke-dasharray: 4 7; filter: drop-shadow(0 0 4px var(--lamp)); }
+.no-motion .scene[data-scene="5"] .s5-dot,
+.no-motion .scene[data-scene="5"] .s5-layer { animation: none !important; }

@@ -1,0 +1,127 @@
+/* 장면 9: 수사 결론 — 두 학교 위에 겹친 발광 동심원(분석 층) */
+
+/* 1 큰 자막: 질문 → 가설 → 절반만 맞다 */
+.scene[data-scene="9"] .s9-q { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; text-align: center; transition: opacity 700ms, filter 700ms; }
+.scene[data-scene="9"] .s9-q p { margin: 0; text-shadow: 0 2px 24px rgb(0 0 0 / 85%); }
+.scene[data-scene="9"] .s9-q .q1 { font: 800 60px/1.2 var(--font); letter-spacing: -.04em; color: var(--night-ink); }
+.scene[data-scene="9"] .s9-q .q2 { font: 500 30px/1.4 var(--font); color: var(--night-soft); opacity: 0; transform: translateY(10px); transition: opacity 800ms, transform 800ms var(--ease); }
+.scene[data-scene="9"] .s9-q .q3 { margin-top: 30px; font: 800 76px/1.1 var(--font); letter-spacing: -.045em; color: var(--lamp); opacity: 0; transform: scale(.96); transition: opacity 900ms, transform 900ms var(--ease); }
+.scene[data-scene="9"] .s9-q .show { opacity: 1; transform: none; }
+
+/* 2 지도 층: 3D 위치를 따라가는 SVG */
+.scene[data-scene="9"] .s9-map { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.scene[data-scene="9"] .s9-map text { font-family: var(--font); paint-order: stroke; stroke: rgb(0 0 0 / 70%); stroke-width: 5px; stroke-linejoin: round; }
+
+/* 동심원: 분석 층의 발광 선 */
+.scene[data-scene="9"] .rings circle { fill: none; stroke: var(--glow); }
+.scene[data-scene="9"] .rings .z0 { stroke-width: 2.5; fill: color-mix(in srgb, var(--glow) 16%, transparent); filter: drop-shadow(0 0 8px color-mix(in srgb, var(--glow) 80%, transparent)); }
+.scene[data-scene="9"] .rings .z1 { stroke-width: 2; opacity: .8; filter: drop-shadow(0 0 5px color-mix(in srgb, var(--glow) 70%, transparent)); }
+.scene[data-scene="9"] .rings .z2 { stroke-width: 1.5; opacity: .55; stroke-dasharray: 4 8; }
+.scene[data-scene="9"] .rings .core { font-weight: 800; font-size: 28px; fill: var(--night-ink); text-anchor: middle; }
+.scene[data-scene="9"] .rings .zlab { font-weight: 600; font-size: 19px; fill: var(--glow); text-anchor: middle; }
+.scene[data-scene="9"] .rings .zlab.ppl { fill: var(--lamp); }
+.scene[data-scene="9"] .rings .sname { font-weight: 800; font-size: 32px; text-anchor: middle; fill: var(--night-ink); }
+.scene[data-scene="9"] .rings.hm .sname { fill: var(--hanmin); }
+.scene[data-scene="9"] .rings.gb .sname { fill: var(--gbs); }
+.scene[data-scene="9"] .rings .stype { font-weight: 500; font-size: 22px; text-anchor: middle; fill: var(--night-soft); }
+
+/* 안쪽: 문서가 따르는 활동 = 종이 쪽지 */
+.scene[data-scene="9"] .slip .pg { fill: var(--paper-hi); filter: drop-shadow(0 6px 10px rgb(0 0 0 / 60%)); }
+.scene[data-scene="9"] .slip .sl { font: 700 20px var(--serif); fill: var(--paper-ink); text-anchor: middle; stroke: none; }
+/* 맡은 주체 도장: 붉은 인주. 실에 매달린 바깥 활동과 달리 조직이 맡았다는 표시 */
+.scene[data-scene="9"] .seal rect { fill: none; stroke: var(--red); stroke-width: 2; opacity: .9; }
+.scene[data-scene="9"] .seal text { font: 700 18.5px var(--font); fill: var(--red); text-anchor: middle; stroke: none; text-shadow: none; }
+.scene[data-scene="9"] .seal { transform-box: fill-box; transform-origin: center; }
+.scene[data-scene="9"].drawing .seal { animation: s9-stamp 420ms cubic-bezier(.2, .9, .3, 1.2) both; animation-delay: calc(1900ms + var(--j) * 160ms); }
+@keyframes s9-stamp { from { opacity: 0; transform: scale(1.6); } to { opacity: 1; transform: none; } }
+/* 3 끊겨도 도장 찍힌 쪽지는 제자리. 한 번 짚어 준다 */
+.scene[data-scene="9"].cut .seal rect { animation: s9-hold 1400ms ease-out 900ms both; }
+@keyframes s9-hold { 0% { stroke-width: 2; filter: none; } 35% { stroke-width: 3; filter: drop-shadow(0 0 6px var(--red)); } 100% { stroke-width: 2; filter: none; } }
+
+/* 바깥: 사람에게 매달린 활동 */
+.scene[data-scene="9"] .out .dot { fill: var(--lamp); filter: drop-shadow(0 0 6px var(--lamp)); }
+.scene[data-scene="9"] .out .olab { font-weight: 700; font-size: 26px; fill: var(--night-ink); text-anchor: end; }
+/* 실이 글자 위를 지나가도 읽히게 글자 둘레를 어둡게 */
+.scene[data-scene="9"] .out .olab { paint-order: stroke; stroke: rgb(4 8 14 / 85%); stroke-width: 7px; stroke-linejoin: round; }
+.scene[data-scene="9"] .gbo .dot { fill: var(--gbs); filter: drop-shadow(0 0 6px var(--gbs)); }
+.scene[data-scene="9"] .gbo .note { font-weight: 500; font-size: 19px; fill: var(--night-soft); text-anchor: end; opacity: 0; transition: opacity 700ms 600ms; }
+.scene[data-scene="9"] .hm-out-layer .out { transform-box: fill-box; transform-origin: center; transition: transform 1300ms cubic-bezier(.3, .1, .3, 1), opacity 1300ms; }
+
+/* 실: 한민은 불빛(교사)으로, 경기북은 학생 기수로 */
+.scene[data-scene="9"] .th { fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.scene[data-scene="9"] .th.whole, .scene[data-scene="9"] .th.piece { stroke: var(--lamp); filter: drop-shadow(0 0 4px color-mix(in srgb, var(--lamp) 70%, transparent)); }
+.scene[data-scene="9"] .th.piece { opacity: 0; }
+.scene[data-scene="9"] .th.gb { stroke: var(--gbs); opacity: .85; }
+.scene[data-scene="9"] .spark { fill: var(--lamp); opacity: 0; }
+.scene[data-scene="9"] .spark.go { animation: s9-spark 700ms ease-out; }
+@keyframes s9-spark { 0% { opacity: 1; r: 4; } 100% { opacity: 0; r: 26; } }
+
+/* 불빛 기둥: AI 라운지에서 담당 교사까지 */
+.scene[data-scene="9"] .beam { stroke: var(--lamp); stroke-width: 3; stroke-dasharray: 2 7; stroke-linecap: round; opacity: .85; transition: opacity 900ms; }
+.scene[data-scene="9"] .glowdot { fill: var(--lamp); filter: drop-shadow(0 0 10px var(--lamp)); transition: opacity 900ms; }
+.scene[data-scene="9"] .top { pointer-events: auto; cursor: pointer; }
+.scene[data-scene="9"] .top .hit { fill: transparent; stroke: none; }
+.scene[data-scene="9"] .pp { fill: currentColor; stroke: none; }
+.scene[data-scene="9"] .t-fig { color: var(--lamp); transition: color 900ms, opacity 900ms; }
+.scene[data-scene="9"] .who { font-weight: 800; font-size: 26px; fill: var(--night-ink); text-anchor: middle; }
+.scene[data-scene="9"] .top .who { fill: var(--lamp); text-anchor: start; }
+.scene[data-scene="9"] .who-s { font-weight: 500; font-size: 20px; fill: var(--night-soft); text-anchor: middle; }
+.scene[data-scene="9"] .top .who-s { text-anchor: start; }
+.scene[data-scene="9"] .hint { font: 600 19px var(--mono); fill: var(--lamp); opacity: 0; transition: opacity 500ms; }
+.scene[data-scene="9"][data-sub="3"]:not(.cut) .hint { opacity: .9; animation: s9-blink 1.6s ease-in-out infinite; }
+@keyframes s9-blink { 50% { opacity: .35; } }
+/* 9-3 끊기기 직전: 불빛과 실이 한 번 팽팽하게 밝아진다 */
+.scene[data-scene="9"].pre .beam { opacity: 1; stroke-width: 4; animation: s9-taut 1000ms ease-in-out both; }
+.scene[data-scene="9"].pre .glowdot { animation: s9-taut 1000ms ease-in-out both; }
+.scene[data-scene="9"].pre .th.whole { filter: drop-shadow(0 0 6px var(--lamp)); }
+@keyframes s9-taut { 0%, 100% { filter: drop-shadow(0 0 6px var(--lamp)); } 55% { filter: drop-shadow(0 0 18px var(--lamp)) brightness(1.4); } }
+
+/* 학생 기수 */
+.scene[data-scene="9"] .cohort .pp { color: var(--gbs); }
+.scene[data-scene="9"] .cohort .old, .scene[data-scene="9"] .cohort .new { transition: opacity 900ms, transform 900ms var(--ease); }
+.scene[data-scene="9"] .cohort .new { opacity: 0; transform: translateX(26px); }
+
+/* 2 처음 그리기 */
+.scene[data-scene="9"].drawing .th.whole { stroke-dasharray: 1; animation: s9-draw 1500ms var(--ease) both; animation-delay: calc(900ms + var(--i) * 140ms); }
+@keyframes s9-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.scene[data-scene="9"].drawing .rings { animation: s9-in 900ms var(--ease) both; }
+@keyframes s9-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* 3 끊기: 불이 꺼지고 바깥 활동이 흩어진다 */
+.scene[data-scene="9"].cut .th.whole { opacity: 0; }
+.scene[data-scene="9"].cut .th.piece { opacity: 1; }
+.scene[data-scene="9"].cut .th.piece.b { opacity: .5; }
+.scene[data-scene="9"].cut .th.piece.a { stroke: var(--night-soft); filter: none; opacity: .7; }
+.scene[data-scene="9"].cut .hm-out-layer .out { transform: translate(var(--sx), var(--sy)) rotate(var(--r)); opacity: .45; }
+.scene[data-scene="9"].cut .hm-out-layer .dot { fill: var(--night-soft); filter: none; }
+.scene[data-scene="9"].cut .beam { opacity: .12; }
+.scene[data-scene="9"].cut .glowdot { opacity: .15; }
+.scene[data-scene="9"].cut .t-fig { color: var(--night-faint); }
+.scene[data-scene="9"].cut .top .who, .scene[data-scene="9"].cut .top .who-s { opacity: .45; }
+.scene[data-scene="9"].cut .cohort .old { opacity: 0; transform: translateX(-26px); }
+.scene[data-scene="9"].cut .cohort .new { opacity: 1; transform: none; }
+.scene[data-scene="9"].cut .gbo.alps { opacity: .5; }
+.scene[data-scene="9"].cut .gbo .note { opacity: 1; }
+.scene[data-scene="9"].cut .th.gb.alps { opacity: .25; stroke-dasharray: 3 7; }
+
+/* 하단 자막 */
+.scene[data-scene="9"] .s9-cap { max-width: 1100px; }
+.scene[data-scene="9"] .s9-cap .k-doc { color: var(--glow); }
+.scene[data-scene="9"] .s9-cap .k-ppl { color: var(--lamp); }
+.scene[data-scene="9"] .s9-cap h2 { transition: opacity 600ms; }
+.scene[data-scene="9"] .s9-cap .after { position: absolute; left: 0; bottom: 0; opacity: 0; white-space: nowrap; }
+.scene[data-scene="9"].cut .s9-cap .before { opacity: 0; }
+.scene[data-scene="9"].cut .s9-cap .after { opacity: 1; transition-delay: 700ms; }
+
+/* 끊긴 뒤: 활동 쪽 실은 짧은 꼬리로만 남는다 */
+.scene[data-scene="9"] .tail { fill: none; stroke: var(--night-soft); stroke-width: 2.5; stroke-linecap: round; opacity: 0; transition: opacity 600ms 300ms; }
+.scene[data-scene="9"].cut .tail { opacity: .9; }
+.scene[data-scene="9"].cut .th.piece.a { opacity: 0; }
+
+/* 증거 번호: 기록철에서 날아와 활동 옆에 꽂힌다 */
+.scene[data-scene="9"] .ex-pin { opacity: 0; transition: opacity 400ms; transform-box: fill-box; transform-origin: center; }
+.scene[data-scene="9"][data-sub="2"] .ex-pin, .scene[data-scene="9"][data-sub="3"] .ex-pin { opacity: 1; }
+.scene[data-scene="9"] .ex-pin rect { fill: var(--paper-hi); stroke: var(--red); stroke-width: 1.5; filter: drop-shadow(0 3px 5px rgb(0 0 0 / 55%)); }
+.scene[data-scene="9"] .ex-pin text { font: 700 14px var(--mono); fill: var(--red); text-anchor: middle; stroke: none; }
+.scene[data-scene="9"].drawing .ex-pin { animation: s9-exin 1000ms var(--ease) both; animation-delay: calc(2700ms + var(--k) * 110ms); }
+@keyframes s9-exin { 0% { transform: translate(var(--fx, -600px), var(--fy, 0)) scale(2.2) rotate(-8deg); opacity: 0; } 18% { opacity: 1; } 100% { transform: none; opacity: 1; } }

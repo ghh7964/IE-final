@@ -1,0 +1,458 @@
+/* ═════════════════════════════════════════════════════════════
+   디자인 콘셉트: 수사 다큐
+   - 무대 전체가 밤이다. 바탕은 언제나 3D 현장(#world)이고, 장면은 그 위에 겹친다.
+   - 왼쪽은 수사 기록철(보고서 원문): 마닐라 서류철에 묶인 낱장, 오른쪽 끝에 증거 색인표.
+   - 증거 문서는 번호(증거 01…)를 달고 원래 생김새대로 나온다:
+       게시판 캡처(.doc-post), 계획서 쪽(.doc-plan), 기사 오린 것(.doc-clip), 위키 화면(.doc-wiki), 내 메모(.doc-memo).
+     화면에서 물러날 때 기록철 색인표로 접혀 들어가고, 9번 결론에서 그 번호들이 제자리에 꽂힌다.
+   - 요소는 세 종류만 쓴다.
+       기록: 증거 문서·사진 인화(.paper, .print), 붉은 연필 표시(.mark-red)
+       현장: 3D 건물·피규어(world.js), 장소·시각 자막(.stamp)
+       분석: 발광 선과 라벨(.holo, .hl-label), 큰 숫자(.num)
+   - 기록과 현장은 붉은 실(#strings)로 이어진다. 원문에서 지금 말하는 문장과
+     화면의 해당 대상(data-ev)을 잇는 수사판의 실이다.
+   - 흰 UI 카드, 알약 태그, 장식용 아이콘·라벨은 쓰지 않는다.
+   ═════════════════════════════════════════════════════════════ */
+:root {
+  --W: 1600px;
+  --H: 900px;
+  --report-w: 600px;          /* 분할 모드 왼쪽 기록철 자리 */
+  --vis-split-w: 1000px;      /* 분할 모드 오른쪽 현장 자리 */
+  --lb: 84px;                 /* 레터박스 높이 */
+
+  /* 밤 */
+  --night: #05080e;
+  --night-2: #0c121d;
+  --night-3: #141c2b;
+  --night-ink: #eef2f7;       /* 밤 위의 글자 */
+  --night-soft: #9aa6b8;
+  --night-faint: #5d6a7e;
+
+  /* 빛 */
+  --lamp: #ffd27a;            /* 꺼지지 않은 불빛 = 형광펜 */
+  --lamp-deep: #f4b63a;
+  --glow: #5fe0d4;            /* 분석 층 발광 선 */
+  --red: #e0493b;             /* 붉은 실, 붉은 연필(증거 표시) */
+
+  /* 학교(밤 위에서 읽히는 밝기) */
+  --hanmin: #33c2b0;
+  --gbs: #a597ff;
+  --ai: #f08a4b;              /* AI·데이터 계열 과목 */
+
+  /* 기록철 종이 */
+  --paper: #efe7d4;
+  --paper-hi: #f8f1e1;
+  --paper-lo: #dfd3b9;
+  --paper-ink: #221d16;
+  --paper-soft: #5b5244;
+  --paper-faint: #8b8170;
+  --sheet: #ece9e2;           /* 기록철 낱장(복사지) */
+  --folder: #a88a55;          /* 마닐라 서류철 */
+  --folder-hi: #c4a671;
+  --folder-ink: #3d2f18;
+  --screen: #f4f5f6;          /* 화면 캡처(게시판·위키) */
+  --screen-ink: #1f2328;
+  --screen-soft: #626a73;
+  --screen-line: #d5d9dd;
+  --news: #e6e0d2;            /* 신문·잡지 종이 */
+  --memo-line: rgb(74 111 165 / 28%);
+  --oj-blue: #0076c0;         /* 채점 사이트 화면(2-3) */
+  --oj-ok: #009874;
+  --oj-red: #e0443a;
+  --oj-code: #f7f7f9;
+
+  --font: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+  --serif: "Noto Serif KR", "AppleMyungjo", serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --ease: cubic-bezier(.22, .8, .2, 1);
+  --t: 620ms;
+
+  /* 엔진이 단계마다 바꾸는 값 */
+  --world-dim: 0;
+  --world-blur: 0px;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  width: 100%; height: 100%; margin: 0; overflow: hidden;
+  background: #000; color: var(--night-ink);
+  font-family: var(--font); word-break: keep-all; overflow-wrap: break-word;
+}
+button { font: inherit; }
+.presentation { position: fixed; inset: 0; }
+
+/* 1600×900 고정 무대 */
+.deck {
+  position: absolute; left: 50%; top: 50%;
+  width: var(--W); height: var(--H);
+  transform-origin: center; overflow: hidden;
+  background: var(--night);
+}
+
+/* ───────── 현장: 3D 세계(무대 전체를 덮는다) ───────── */
+.world { position: absolute; inset: 0; z-index: 0; filter: blur(var(--world-blur)); transition: filter 700ms ease; }
+.world-shade {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: var(--night); opacity: var(--world-dim); transition: opacity 900ms ease;
+}
+/* 분할 모드: 기록철 뒤쪽 현장은 더 어둡게(종이에 시선이 머물도록) */
+.world-shade::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgb(5 8 14 / 60%) 520px, rgb(5 8 14 / 25%) 700px, transparent 900px);
+  transition: opacity 900ms ease;
+}
+.deck[data-mode="immersive"] .world-shade::after { opacity: 0; }
+.no-webgl ~ .world-shade { opacity: 1; }
+
+/* ───────── 기록: 책상 위의 기록철 ───────── */
+/* 책상: 어두운 나무. 결은 늘인 노이즈로, 오른쪽 끝은 현장 쪽으로 어둠에 녹는다 */
+.desk {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 680px; z-index: 2; pointer-events: none;
+  background-color: #140d08;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='680' height='900'><filter id='w'><feTurbulence type='fractalNoise' baseFrequency='0.004 0.09' numOctaves='3' seed='4'/><feColorMatrix values='0 0 0 0 .32  0 0 0 0 .2  0 0 0 0 .12  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23w)'/></svg>"),
+    linear-gradient(180deg, #1b120b, #0f0905);
+  background-blend-mode: soft-light, normal;
+  -webkit-mask-image: linear-gradient(90deg, #000 78%, transparent 100%); mask-image: linear-gradient(90deg, #000 78%, transparent 100%);
+  transition: transform 900ms var(--ease), opacity 700ms ease;
+}
+.deck[data-mode="immersive"] .desk { transform: translateX(-100%); opacity: 0; }
+
+/* 책상 가장자리 그늘(고정) */
+.lamp {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 680px; z-index: 5; pointer-events: none;
+  background: radial-gradient(ellipse 560px 620px at 300px 450px, transparent 55%, rgb(6 4 2 / 45%) 100%);
+  -webkit-mask-image: linear-gradient(90deg, #000 80%, transparent 100%); mask-image: linear-gradient(90deg, #000 80%, transparent 100%);
+  transition: opacity 700ms ease;
+}
+.deck[data-mode="immersive"] .lamp { opacity: 0; }
+
+/* 기록철: 배경 없는 창. 낱장들이 책상 위에서 미끄러진다. 위아래는 그늘로 녹는다 */
+.report-pane {
+  position: absolute; left: 0; top: 0; bottom: 0; width: var(--report-w); z-index: 4; color: var(--paper-ink);
+  transition: transform 900ms var(--ease), opacity 700ms ease;
+}
+.deck[data-mode="immersive"] .report-pane { transform: translateX(-108%) rotate(-2deg); opacity: 0; }
+/* 마닐라 서류철: 낱장 뒤에 깔리고, 낱장 사이로 보인다 */
+.report-pane::before {
+  content: ""; position: absolute; left: 20px; width: 560px; top: 58px; bottom: -12px; z-index: 0;
+  background: linear-gradient(180deg, var(--folder-hi), var(--folder) 30%);
+  border-radius: 6px 6px 0 0; box-shadow: 0 20px 40px rgb(0 0 0 / 55%), inset 0 1px 0 rgb(255 255 255 / 18%);
+}
+.report-scroll { z-index: 1; }
+/* 증거 색인표: 서류철 오른쪽 끝에 붙는다. 처음 나온 증거부터 하나씩, 지금 화면에 나온 증거는 빠져나와 붉다 */
+.ex-tabs { position: absolute; left: 560px; top: 132px; z-index: 0; display: flex; flex-direction: column; gap: 5px; }
+.ex-tabs i {
+  display: block; width: 46px; height: 30px; padding: 0 6px 0 0; box-sizing: border-box;
+  font: 600 13px/30px var(--mono); font-style: normal; text-align: right; color: var(--folder-ink);
+  background: var(--folder-hi); border-radius: 0 5px 5px 0; box-shadow: 2px 3px 6px rgb(0 0 0 / 45%);
+  opacity: 0; transform: translateX(-24px); transition: opacity 400ms, transform 400ms var(--ease), background 300ms, color 300ms;
+}
+.ex-tabs i.filed { opacity: 1; transform: none; }
+.ex-tabs i.cur { transform: translateX(12px); background: var(--red); color: var(--paper-hi); }
+/* 접혀 들어가는 문서 */
+.ex-ghost {
+  position: absolute; z-index: 7; pointer-events: none; transform-origin: center;
+  background: var(--paper); box-shadow: 0 10px 24px rgb(0 0 0 / 45%);
+  display: grid; place-items: center; font: 700 28px var(--mono); color: var(--red);
+}
+
+/* 색인표: 지금 원문의 절과 인쇄본 쪽수 */
+.report-toolbar {
+  position: absolute; left: 34px; top: 20px; z-index: 6; max-width: 520px;
+  display: flex; align-items: baseline; gap: 12px; padding: 9px 16px 8px;
+  background: var(--paper-hi); color: var(--paper-ink);
+  transform: rotate(-.8deg); box-shadow: 0 8px 18px rgb(0 0 0 / 55%);
+}
+.report-location { font: 700 16px var(--font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.report-location small { margin-left: 12px; font: 600 15px var(--serif); color: var(--red); }
+.report-label { display: none; }
+.report-scroll {
+  position: absolute; inset: 0; overflow: hidden auto;
+  scrollbar-width: none; overscroll-behavior: contain;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, transparent 62px, #000 120px, #000 calc(100% - 50px), transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, transparent 62px, #000 120px, #000 calc(100% - 50px), transparent 100%);
+}
+.report-scroll::-webkit-scrollbar { display: none; }
+.report-doc { padding: 96px 30px 460px 34px; }
+
+/* 낱장: 인쇄본 한 쪽 = 종이 한 장. 아래에 인쇄본과 같은 쪽 번호 */
+.sheet {
+  position: relative; margin: 0 0 30px; padding: 44px 40px 58px;
+  background: var(--sheet);
+  box-shadow: 0 10px 22px rgb(0 0 0 / 45%), 0 2px 4px rgb(0 0 0 / 35%);
+}
+.sheet:nth-child(even) { transform: translateX(5px); }
+.sheet::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='p'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' seed='9'/><feColorMatrix values='0 0 0 0 .55  0 0 0 0 .5  0 0 0 0 .42  0 0 0 .18 0'/></filter><rect width='100%' height='100%' filter='url(%23p)'/></svg>");
+}
+.sheet-no { position: absolute; left: 0; right: 0; bottom: 20px; text-align: center; font: 500 14px var(--serif); color: var(--paper-faint); }
+.rp-loading { color: var(--paper-faint); }
+
+.rp-title { padding-bottom: 24px; border-bottom: 1px solid color-mix(in srgb, var(--paper-ink) 18%, transparent); margin-bottom: 8px; }
+.rp-title > p:first-child { margin: 0 0 10px; color: var(--paper-faint); font-size: 13px; font-weight: 600; }
+.rp-title h1 { margin: 0; font: 800 24px/1.35 var(--font); letter-spacing: -.03em; }
+.rp-title h2 { margin: 10px 0 0; font: 500 15px/1.55 var(--font); color: var(--paper-soft); }
+.rp-author { margin: 10px 0 0; font-size: 13px; color: var(--paper-faint); }
+
+.report-doc h2 { font: 800 19px var(--font); margin: 32px 0 10px; letter-spacing: -.02em; }
+.report-doc h3 { font: 700 16px var(--font); margin: 22px 0 8px; color: var(--paper-soft); }
+.report-doc p { margin: 0 0 14px; font: 400 16.5px/1.85 var(--serif); color: var(--paper-ink); letter-spacing: -.02em; }
+.report-doc table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0 18px; }
+.report-doc th, .report-doc td { border-top: 1px solid color-mix(in srgb, var(--paper-ink) 16%, transparent); padding: 6px; vertical-align: top; text-align: left; }
+.report-doc .table-caption { font-weight: 700; font-size: 14px; margin-top: 18px; }
+.report-doc figure { margin: 14px 0 20px; }
+.report-doc figure svg { width: 100%; height: auto; }
+.report-doc figcaption { font-size: 12.5px; color: var(--paper-soft); line-height: 1.5; }
+.report-doc figcaption strong { display: block; color: var(--paper-ink); }
+.report-doc .refs p { font: 12px/1.5 var(--font); padding-left: 1.6em; text-indent: -1.6em; }
+
+/* 지금 말하는 문장: 나머지는 물러나고, 그 문장에만 불빛이 든다 */
+.report-pane.tracking .report-doc p,
+.report-pane.tracking .report-doc h2,
+.report-pane.tracking .report-doc h3,
+.report-pane.tracking .report-doc table,
+.report-pane.tracking .report-doc figure { opacity: .62; transition: opacity 300ms; }
+.report-pane.tracking .report-doc .has-hl { opacity: 1; }
+mark.hl { background: none; color: inherit; transition: background 300ms; }
+mark.hl.on {
+  color: var(--paper-ink); font-weight: 600;
+  background: linear-gradient(180deg, transparent 50%, color-mix(in srgb, var(--lamp-deep) 62%, transparent) 50% 94%, transparent 94%);
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+}
+
+/* ───────── 붉은 실: 기록 ↔ 현장 ───────── */
+.strings { position: absolute; inset: 0; z-index: 7; pointer-events: none; overflow: visible; }
+.strings path { fill: none; stroke: var(--red); stroke-width: 2; stroke-linecap: round; filter: drop-shadow(0 1px 1px rgb(0 0 0 / 60%)); }
+.strings circle { fill: var(--red); filter: drop-shadow(0 1px 2px rgb(0 0 0 / 60%)); }
+.strings .s-draw { stroke-dasharray: var(--len); stroke-dashoffset: var(--len); animation: s-draw 700ms var(--ease) forwards; }
+@keyframes s-draw { to { stroke-dashoffset: 0; } }
+/* 여백 번호: 지금 문장이 가리키는 증거 번호를 붉은 연필로 */
+.strings .mtag ellipse { fill: var(--sheet); stroke: var(--red); stroke-width: 2.2; }
+.strings .mtag text { font: 700 14px var(--mono); fill: var(--red); text-anchor: middle; }
+.strings .pin { transform-box: fill-box; transform-origin: center; animation: pin-in 260ms var(--ease) both; }
+@keyframes pin-in { from { transform: scale(0); } }
+
+/* ───────── 장면 층 ───────── */
+.visual {
+  position: absolute; top: 0; bottom: 0; right: 0; width: var(--vis-split-w); z-index: 3;
+  transition: width 900ms var(--ease);
+}
+.deck[data-mode="immersive"] .visual { width: var(--W); }
+.scenes { position: absolute; inset: 0; }
+.deck.chaptering .scenes { opacity: 0; }
+.scenes { transition: opacity 500ms ease; }
+
+.scene {
+  position: absolute; inset: 0; color: var(--night-ink);
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity 520ms ease, visibility 0s linear 520ms;
+}
+.scene.active { opacity: 1; visibility: visible; transition: opacity 620ms ease 120ms, visibility 0s; }
+.scene.active * { pointer-events: auto; }
+.scene.active .pass, .scene.active .pass * { pointer-events: none; }
+
+/* data-in="k": k단계부터 보임 / data-out="k": k단계부터 사라짐 */
+[data-in], [data-out] { transition: opacity var(--t) ease, transform var(--t) var(--ease), filter var(--t) ease; }
+[data-in]:not(.on) { opacity: 0; transform: translateY(14px); pointer-events: none; }
+[data-out].off { opacity: 0; filter: blur(6px); pointer-events: none; }
+.no-motion [data-in], .no-motion [data-out] { transition: none !important; transform: none !important; }
+
+/* 장소·시각 자막(다큐 타임스탬프) */
+.stamp {
+  position: absolute; left: 44px; top: 34px; z-index: 6;
+  font: 500 16px/1 var(--mono); letter-spacing: .02em; color: var(--night-soft);
+  white-space: nowrap; pointer-events: none;
+  text-shadow: 0 0 2px rgb(0 0 0 / 95%), 0 1px 8px rgb(0 0 0 / 90%), 0 0 22px rgb(0 0 0 / 75%);
+  padding: 7px 10px; margin-left: -10px; background: rgb(5 8 14 / 55%); border-radius: 2px;
+}
+.stamp:empty { display: none; }
+.deck.letterboxed .stamp { top: calc(var(--lb) + 24px); }
+.stamp .caret { display: inline-block; width: .55em; margin-left: 2px; border-bottom: 2px solid currentColor; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* 장 자막: 준거가 시작될 때 2초 */
+.chapter {
+  position: absolute; inset: 0; z-index: 9; pointer-events: none;
+  display: grid; place-content: center; text-align: center;
+  background: rgb(3 5 9 / 82%); opacity: 0; transition: opacity 500ms ease;
+}
+.deck[data-mode="split"] .chapter { left: var(--report-w); }
+.chapter.on { opacity: 1; }
+.chapter b { display: block; font: 400 22px var(--serif); color: var(--lamp); margin-bottom: 18px; }
+.chapter strong { display: block; font: 800 60px/1.15 var(--font); letter-spacing: -.04em; color: var(--night-ink); }
+.chapter span { display: block; margin-top: 18px; font: 500 22px var(--font); color: var(--night-soft); }
+
+/* 레터박스 */
+.letterbox { position: absolute; left: 0; right: 0; height: var(--lb); background: #000; z-index: 8; transition: transform 900ms var(--ease); }
+.letterbox.top { top: 0; transform: translateY(-100%); }
+.letterbox.bottom { bottom: 0; transform: translateY(100%); }
+.deck.letterboxed .letterbox { transform: none; }
+
+.blackout { position: absolute; inset: 0; background: #000; z-index: 30; opacity: 0; pointer-events: none; transition: opacity 400ms; }
+.deck.blacked .blackout { opacity: 1; pointer-events: auto; }
+
+/* 진행 표시(발표자만 알아볼 정도로) */
+.hud { position: absolute; right: 22px; bottom: 14px; z-index: 9; display: flex; align-items: center; gap: 10px; opacity: .45; }
+.hud .progress { width: 90px; height: 2px; background: rgb(255 255 255 / 14%); overflow: hidden; }
+.hud .progress span { display: block; height: 100%; width: 0; background: var(--night-soft); transition: width 400ms; }
+.hud .counter { font: 500 11px var(--mono); color: var(--night-soft); }
+.deck.letterboxed .hud { opacity: 0; }
+
+/* 장면 목록(O) */
+.overview {
+  position: absolute; inset: 60px 200px; z-index: 40; overflow: auto;
+  background: var(--night-2); color: var(--night-ink); border: 1px solid var(--night-3);
+  padding: 28px 36px; box-shadow: 0 30px 80px rgb(0 0 0 / 60%);
+}
+.overview h2 { margin: 0 0 14px; font-size: 22px; }
+.overview h2 small { font-size: 13px; color: var(--night-soft); font-weight: 500; margin-left: 8px; }
+.overview ol { margin: 0; padding: 0; list-style: none; columns: 2; column-gap: 28px; }
+.overview li { break-inside: avoid; }
+.overview button {
+  display: flex; gap: 10px; width: 100%; text-align: left; border: 0; background: none; cursor: pointer;
+  padding: 6px 8px; font-size: 14px; color: var(--night-ink);
+}
+.overview button:hover, .overview button.cur { background: var(--night-3); }
+.overview button b { font: 600 12px var(--mono); color: var(--night-soft); min-width: 44px; padding-top: 2px; }
+
+/* ═════════ 장면이 함께 쓰는 부품 ═════════ */
+
+/* 하단 자막 제목(다큐 로어서드): 장면의 제목은 여기 하나 */
+.lt { position: absolute; left: 56px; bottom: 64px; max-width: 820px; text-shadow: 0 2px 18px rgb(0 0 0 / 85%); }
+.lt h2 { margin: 0; font: 800 42px/1.25 var(--font); letter-spacing: -.035em; color: var(--night-ink); }
+.lt p { margin: 12px 0 0; font: 500 22px/1.5 var(--font); color: var(--night-soft); }
+.lt.top { bottom: auto; top: 76px; }
+.deck.letterboxed .lt { bottom: calc(var(--lb) + 40px); }
+
+/* 기록: 종이 문서 */
+.paper {
+  position: absolute; font-family: var(--serif); color: var(--paper-ink);
+  background: linear-gradient(180deg, var(--paper-hi), var(--paper));
+  padding: 22px 26px; transform: rotate(var(--rot, 0deg));
+  box-shadow: 0 24px 50px rgb(0 0 0 / 55%), 0 4px 10px rgb(0 0 0 / 35%);
+}
+.paper .src { display: block; margin-top: 12px; font: 500 13px var(--font); color: var(--paper-faint); }
+.paper h4 { margin: 0 0 8px; font: 700 15px var(--font); color: var(--paper-soft); }
+/* 증거 번호 라벨(엔진이 [data-ex] 문서에 붙인다) */
+.ex-no {
+  position: absolute; right: 16px; top: -13px; z-index: 2; padding: 4px 9px 3px;
+  font: 600 13px/1.1 var(--mono); letter-spacing: .04em; font-style: normal; color: var(--red);
+  background: var(--paper-hi); border: 1.5px solid var(--red); transform: rotate(2.5deg);
+  box-shadow: 0 2px 5px rgb(0 0 0 / 30%);
+}
+/* 원래 생김새 ① 게시판 캡처 */
+.paper.doc-post { font-family: var(--font); background: var(--screen); color: var(--screen-ink); padding: 18px 26px 22px; border-radius: 6px; }
+.doc-post .post-h { display: flex; align-items: center; gap: 12px; margin: 0 0 14px; padding-bottom: 12px; border-bottom: 1px solid var(--screen-line); }
+.doc-post .post-h::before { content: ""; flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--screen-line); }
+.doc-post .post-h b { display: block; font: 600 17px/1.3 var(--font); color: var(--screen-ink); }
+.doc-post .post-h small { display: block; font: 500 14px/1.3 var(--font); color: var(--screen-soft); }
+.doc-post p { font-family: var(--font) !important; color: var(--screen-ink); }
+/* ② 계획서 한 쪽: 머리줄(문서 이름 · 쪽) + 테두리 표 */
+.paper.doc-plan { background: var(--sheet); padding: 16px 22px 20px; }
+.doc-plan .plan-h { display: flex; justify-content: space-between; gap: 16px; margin: 0 0 12px; padding-bottom: 6px; border-bottom: 1.5px solid var(--paper-ink); font: 500 14px var(--serif); color: var(--paper-soft); }
+.doc-plan table { width: 100%; border-collapse: collapse; }
+.doc-plan th, .doc-plan td { border: 1px solid color-mix(in srgb, var(--paper-ink) 45%, transparent); padding: 6px 10px; text-align: left; font: 500 21px/1.4 var(--serif); }
+.doc-plan th { background: color-mix(in srgb, var(--paper-ink) 9%, transparent); font-weight: 700; font-size: 18px; }
+/* ③ 기사 오린 것 */
+.paper.doc-clip { background: var(--news); padding: 22px 28px 26px;
+  clip-path: polygon(0 2%, 6% 0, 14% 1.5%, 23% 0, 34% 1.2%, 45% 0, 57% 1.6%, 68% .2%, 80% 1.4%, 91% 0, 100% 1.8%, 99% 30%, 100% 62%, 99.2% 100%, 88% 98.6%, 76% 100%, 63% 98.4%, 50% 100%, 38% 98.8%, 26% 100%, 13% 98.5%, 0 100%, .8% 64%, 0 31%); }
+.doc-clip > .ex-no { top: 10px; right: 22px; }
+.doc-clip .clip-h { margin: 0 0 12px; padding-bottom: 8px; border-bottom: 3px double color-mix(in srgb, var(--paper-ink) 55%, transparent); font: 700 14px var(--font); letter-spacing: .08em; color: var(--paper-soft); }
+/* ④ 위키 화면 */
+.paper.doc-wiki { font-family: var(--font); background: var(--screen); color: var(--screen-ink); border-top: 4px solid var(--screen-soft); border-radius: 2px; }
+/* ⑤ 내 메모(줄 공책) */
+.paper.doc-memo { background-color: var(--paper-hi);
+  background-image: linear-gradient(90deg, transparent 30px, color-mix(in srgb, var(--red) 45%, transparent) 30px 31.5px, transparent 31.5px),
+    repeating-linear-gradient(180deg, transparent 0 35px, var(--memo-line) 35px 36px);
+  padding-left: 48px; }
+
+/* 기록: 사진 인화 */
+.print {
+  position: absolute; background: var(--paper-hi); padding: 10px 10px 34px;
+  transform: rotate(var(--rot, 0deg));
+  box-shadow: 0 24px 50px rgb(0 0 0 / 55%), 0 4px 10px rgb(0 0 0 / 35%);
+}
+.print img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.print figcaption { position: absolute; left: 12px; right: 12px; bottom: 8px; font: 500 14px var(--serif); color: var(--paper-soft); }
+/* 붉은 연필: 문서 안에서 근거가 되는 부분 */
+.mark-red { background: none; color: inherit; box-shadow: inset 0 -3px 0 var(--red); }
+.circle-red { outline: 2.5px solid var(--red); outline-offset: 4px; border-radius: 40% 55% 45% 60% / 60% 45% 55% 40%; }
+
+/* 분석: 발광 선과 라벨 */
+.holo { stroke: var(--glow); fill: none; filter: drop-shadow(0 0 5px color-mix(in srgb, var(--glow) 75%, transparent)); }
+.hl-label { position: absolute; font: 600 20px var(--font); color: var(--glow); text-shadow: 0 0 14px rgb(0 0 0 / 90%); white-space: nowrap; }
+.num { font: 800 64px/1 var(--font); letter-spacing: -.04em; color: var(--night-ink); }
+.num small { font-size: .42em; margin-left: 4px; color: var(--night-soft); font-weight: 600; }
+
+/* 학교 표시: 알약 대신 색 밑줄 */
+.sch { font-weight: 700; box-shadow: inset 0 -3px 0 var(--c, var(--night-soft)); }
+.sch.hanmin { --c: var(--hanmin); }
+.sch.gbs { --c: var(--gbs); }
+
+/* 큰 자막(몰입 장면) */
+.subtitle-big { font: 800 52px/1.3 var(--font); letter-spacing: -.04em; text-align: center; color: var(--night-ink); text-shadow: 0 2px 24px rgb(0 0 0 / 80%); }
+
+/* 사람 피규어(얼굴·이름 없음) */
+.figure-person { display: inline-block; width: 22px; height: 40px; position: relative; color: var(--night-ink); }
+.figure-person::before { content: ""; position: absolute; left: 5px; top: 0; width: 12px; height: 12px; border-radius: 50%; background: currentColor; }
+.figure-person::after { content: ""; position: absolute; left: 1px; top: 14px; width: 20px; height: 26px; border-radius: 10px 10px 4px 4px; background: currentColor; }
+
+/* 3D 위치에 붙는 라벨(엔진이 좌표를 넣는다: data-anchor) */
+.anchor-label { position: absolute; transform: translate(-50%, -100%); transition: left 120ms linear, top 120ms linear, opacity 400ms; }
+
+/* 필름 질감: 몰입 장면에만 */
+.grain {
+  position: absolute; inset: -50%; z-index: 6; pointer-events: none; opacity: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  mix-blend-mode: overlay; animation: grain 1.2s steps(6) infinite; transition: opacity 900ms;
+}
+.deck[data-mode="immersive"] .grain { opacity: .12; }
+@keyframes grain {
+  0% { transform: translate(0, 0); } 20% { transform: translate(-3%, 2%); } 40% { transform: translate(2%, -3%); }
+  60% { transform: translate(-2%, -1%); } 80% { transform: translate(3%, 3%); } 100% { transform: translate(0, 0); }
+}
+.low .grain { display: none; }
+.no-motion .grain { animation: none; }
+
+/* 계획서에서 오려 낸 표 조각: 찢긴 위아래, 테이프, 진한 머리행, 아래에 쪽수와 문서 이름 */
+.paper.doc-cut {
+  padding: 26px 22px 16px; font-family: var(--font);
+  background: none; box-shadow: none;
+  filter: drop-shadow(0 14px 20px rgb(0 0 0 / 55%)) drop-shadow(0 2px 3px rgb(0 0 0 / 35%));
+}
+.paper.doc-cut::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(178deg, #f5f4f0, #e8e6df);
+  clip-path: polygon(0 5px, 3% 1px, 7% 6px, 12% 2px, 18% 7px, 24% 1px, 31% 5px, 37% 0, 44% 6px, 50% 2px, 57% 7px, 63% 1px, 70% 5px, 76% 0, 83% 6px, 89% 2px, 95% 6px, 100% 1px,
+    100% calc(100% - 6px), 96% 100%, 90% calc(100% - 4px), 84% calc(100% - 1px), 77% calc(100% - 7px), 71% 100%, 64% calc(100% - 5px), 58% calc(100% - 1px), 51% calc(100% - 6px), 45% 100%, 38% calc(100% - 4px), 31% calc(100% - 1px), 25% calc(100% - 7px), 18% 100%, 11% calc(100% - 5px), 5% calc(100% - 1px), 0 calc(100% - 6px));
+}
+.cut-tape { position: absolute; left: 34px; top: -9px; width: 96px; height: 26px; transform: rotate(-5deg); background: rgb(232 224 196 / 62%); box-shadow: 0 1px 2px rgb(0 0 0 / 18%); }
+.doc-cut table { width: 100%; border-collapse: collapse; }
+.doc-cut th { padding: 8px 12px; text-align: left; background: #1f4a66; color: #f4f6f9; font: 700 17px var(--font); letter-spacing: -.01em; }
+.doc-cut th small { font-size: 15px; font-weight: 500; opacity: .85; }
+.doc-cut td { padding: 11px 6px; text-align: center; white-space: nowrap; font: 500 18px var(--font); color: #1c2330; border-bottom: 1.5px solid #4a68a8; }
+.doc-cut td + td { border-left: 1px solid #b8c3dc; }
+.cut-pf { margin: 12px 0 0; font: 600 13px var(--font); color: #2b4d78; }
+.cut-pf b { margin-right: 8px; font: 800 15px var(--font); color: #1f4a66; }
+
+/* 영상 모드(js/video.js, ?video): 녹화 영상이 무대 전체를 덮는다. 엔진은 그대로 돌고 화면만 가린다.
+   필름 질감·블랙아웃·장면 목록·알림만 영상 위에 실제로 그린다. 녹화용이라 진행 표시와 마우스 커서는 숨긴다. */
+.vid { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; display: none; background: #000; object-fit: fill; pointer-events: none; }
+.deck.video .vid { display: block; }
+.deck.video .vid.back { visibility: hidden; }
+.deck.video .world { display: none; }
+.deck.video > :not(.vid, .grain, .overview, .blackout, .vtoast),
+.deck.video > :not(.vid, .grain, .overview, .blackout, .vtoast) * { visibility: hidden !important; }
+.deck.video .grain { z-index: 3; }
+body:has(.deck.video) { cursor: none; }
+.vtoast {
+  position: absolute; left: 50%; bottom: 28px; z-index: 41; transform: translate(-50%, 8px);
+  padding: 8px 16px; border-radius: 6px; background: rgb(0 0 0 / 72%); color: var(--night-ink);
+  font: 500 15px var(--font); opacity: 0; pointer-events: none; transition: opacity 300ms, transform 300ms;
+}
+.vtoast.on { opacity: 1; transform: translate(-50%, 0); }
+
+/* 녹화 도구가 찍을 때(?rec): 진행 표시와 필름 질감은 영상에 넣지 않는다(질감은 영상 모드에서 실시간으로 얹는다) */
+.rec .hud, .rec .grain { display: none; }

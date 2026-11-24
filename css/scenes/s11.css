@@ -1,0 +1,82 @@
+/* 장면 11: 개선 방안 — 인수인계 문서(종이)와 다시 묶이는 실 */
+
+/* 인수인계 문서 */
+.scene[data-scene="11"] .s11-kit { position: absolute; inset: 0; transition: opacity 600ms, filter 600ms; }
+.scene[data-scene="11"] .s11-memo { width: 300px; padding: 20px 24px 24px; }
+.scene[data-scene="11"] .s11-memo h4 { margin: 0 0 10px; font: 600 18px var(--font); color: var(--paper-soft); }
+.scene[data-scene="11"] .s11-memo h4 .sch { color: var(--paper-ink); }
+.scene[data-scene="11"] .s11-memo h3 { margin: 0 0 10px; font: 800 29px/1.25 var(--serif); letter-spacing: -.03em; color: var(--paper-ink); }
+.scene[data-scene="11"] .s11-why { display: block; margin-top: 12px; padding-top: 8px; border-top: 1px dashed color-mix(in srgb, var(--paper-ink) 35%, transparent); font: 700 17px var(--font); font-style: normal; color: var(--hanmin); }
+
+/* 인계 → 인수 */
+.scene[data-scene="11"] .s11-hand { display: grid; grid-template-columns: 40px 1fr; gap: 10px 8px; margin: 0; align-items: start; }
+.scene[data-scene="11"] .s11-hand dt { padding-top: 5px; font: 600 14px var(--mono); color: var(--paper-faint); letter-spacing: .04em; }
+.scene[data-scene="11"] .s11-hand dd { margin: 0; }
+.scene[data-scene="11"] .s11-hand .from { font: 500 18px/1.4 var(--serif); color: color-mix(in srgb, var(--paper-faint) 70%, var(--paper-ink)); }
+.scene[data-scene="11"] .s11-hand .from s { text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 58% / 100% 1.5px no-repeat; }
+/* 인수 칸: 장면 9의 부서 도장과 같은 붉은 인주 */
+.scene[data-scene="11"] .seal { display: inline-block; padding: 3px 8px 4px; border: 2px solid var(--red); border-radius: 2px; font: 700 19px/1.35 var(--font); color: var(--red); transform: rotate(-1.6deg); transform-origin: left center; }
+.scene[data-scene="11"].stamping .from s { animation: s11-strike 500ms ease-out both; animation-delay: calc(var(--arr) + 500ms + var(--i) * 300ms); }
+.scene[data-scene="11"].stamping .seal { animation: s11-seal 380ms cubic-bezier(.2, .9, .3, 1.2) both; animation-delay: calc(var(--arr) + 850ms + var(--i) * 300ms); }
+@keyframes s11-strike { from { background-size: 0 1.5px; } to { background-size: 100% 1.5px; } }
+@keyframes s11-seal { from { opacity: 0; transform: rotate(-1.6deg) scale(1.5); } to { opacity: 1; transform: rotate(-1.6deg); } }
+
+.scene[data-scene="11"] .m1 { left: 24px; top: 96px; }
+.scene[data-scene="11"] .m2 { left: 350px; top: 80px; }
+.scene[data-scene="11"] .m3 { left: 676px; top: 70px; }
+.scene[data-scene="11"] .m4 { left: 160px; top: 386px; }
+.scene[data-scene="11"] .m5 { left: 500px; top: 396px; }
+.scene[data-scene="11"][data-sub="2"] .s11-kit { opacity: .4; filter: blur(1.5px); }
+
+/* 경기북과학고: 학생 기수에서 다음 기수로 */
+.scene[data-scene="11"] .s11-gbs { left: 120px; top: 520px; width: 760px; }
+.scene[data-scene="11"] .s11-hand.row { grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+.scene[data-scene="11"] .s11-hand.row > div { display: grid; grid-template-columns: 40px 1fr; gap: 8px; align-items: start; }
+.scene[data-scene="11"] .s11-hand.row dt { padding-top: 10px; }
+.scene[data-scene="11"] .s11-figs { display: flex; align-items: flex-end; gap: 2px; margin-bottom: 8px; }
+.scene[data-scene="11"] .s11-figs small { margin-left: 10px; font: 700 16px var(--font); color: var(--gbs); }
+.scene[data-scene="11"] .s11-figs svg { width: 18px; height: 31px; fill: var(--gbs); }
+.scene[data-scene="11"] .s11-figs.old svg, .scene[data-scene="11"] .s11-figs.old small { opacity: .5; }
+.scene[data-scene="11"] .s11-also { margin: 14px 0 0; font: 500 19px/1.5 var(--serif); color: var(--paper-ink); }
+/* 11-2에서는 경기북 한 장만 도장 */
+.scene[data-scene="11"][data-sub="2"].stamping .s11-kit .seal, .scene[data-scene="11"][data-sub="2"].stamping .s11-kit .from s { animation: none; }
+.scene[data-scene="11"][data-sub="2"].stamping .s11-gbs .from s { animation-delay: calc(var(--arr) + 1000ms); }
+.scene[data-scene="11"][data-sub="2"].stamping .s11-gbs .seal { animation-delay: calc(var(--arr) + 1400ms); }
+
+/* 3 다시 묶기 */
+.scene[data-scene="11"] .s11-3 { position: absolute; inset: 0; }
+.scene[data-scene="11"] .s11-tie { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.scene[data-scene="11"] .s11-tie text { font-family: var(--font); paint-order: stroke; stroke: rgb(0 0 0 / 70%); stroke-width: 5px; stroke-linejoin: round; }
+.scene[data-scene="11"] .alab { font-weight: 700; font-size: 26px; fill: var(--night-ink); text-anchor: end; }
+.scene[data-scene="11"] .dot { fill: var(--lamp); filter: drop-shadow(0 0 6px var(--lamp)); }
+.scene[data-scene="11"] .tail { fill: none; stroke: var(--night-soft); stroke-width: 2.5; stroke-linecap: round; }
+.scene[data-scene="11"] .retie, .scene[data-scene="11"] .hand { fill: none; stroke: var(--lamp); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 1 1; filter: drop-shadow(0 0 4px color-mix(in srgb, var(--lamp) 70%, transparent)); }
+.scene[data-scene="11"] .pp { fill: var(--hanmin); }
+.scene[data-scene="11"] .pp.nxt { fill: var(--lamp); }
+.scene[data-scene="11"] .who { font-weight: 800; font-size: 26px; fill: var(--night-ink); text-anchor: middle; }
+.scene[data-scene="11"] .who-s { font-weight: 500; font-size: 21px; fill: var(--night-soft); text-anchor: middle; }
+
+/* 기록 묶음 */
+.scene[data-scene="11"] .s11-rec { left: 440px; top: 210px; width: 250px; height: 300px; padding: 26px 28px; box-sizing: border-box; }
+.scene[data-scene="11"] .s11-rec.r2 { left: 448px; top: 202px; }
+.scene[data-scene="11"] .s11-rec.r3 { left: 456px; top: 196px; background: var(--paper-lo); }
+.scene[data-scene="11"] .s11-rec h4 { margin: 0 0 14px; font: 800 30px var(--serif); color: var(--paper-ink); }
+.scene[data-scene="11"] .s11-rec ol { margin: 0; padding: 0 0 0 28px; font: 500 22px/1.6 var(--serif); color: var(--paper-soft); }
+
+/* 그리는 순서: 끊긴 꼬리 → 실이 기록에 묶임 → 교사 둘 · 다음 사람 */
+.scene[data-scene="11"] .s11-3 .retie, .scene[data-scene="11"] .s11-3 .hand { stroke-dashoffset: 0; }
+.scene[data-scene="11"] .s11-3 .tail { opacity: 0; }
+.scene[data-scene="11"].drawing .s11-3 .tail { animation: s11-tail 1600ms both; }
+@keyframes s11-tail { 0%, 55% { opacity: .9; } 100% { opacity: 0; } }
+.scene[data-scene="11"].drawing .s11-rec { animation: s11-in 700ms var(--ease) both; animation-delay: 300ms; }
+.scene[data-scene="11"].drawing .retie { animation: s11-draw 900ms var(--ease) both; animation-delay: calc(1000ms + var(--i) * 140ms); }
+.scene[data-scene="11"].drawing .hand { animation: s11-draw 900ms var(--ease) both; animation-delay: 2100ms; }
+.scene[data-scene="11"].drawing .hand.next { animation-delay: 2500ms; }
+.scene[data-scene="11"].drawing .who-g { animation: s11-in 700ms var(--ease) both; animation-delay: 2700ms; }
+.scene[data-scene="11"].drawing .who-g.g2 { animation-delay: 3100ms; }
+@keyframes s11-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes s11-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* 하단 자막 교대: 앞 자막이 물러난 뒤 */
+.scene[data-scene="11"] .s11-lt[data-in].on { transition-delay: 520ms; }
+.scene[data-scene="11"] .s11-3[data-in].on { transition-delay: 450ms; }

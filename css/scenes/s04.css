@@ -1,0 +1,131 @@
+/* 장면 4: 비어 있는 2학년 — 해 질 녘 학교 위 하늘에 뜬 분석 층 홀로그램 */
+
+.scene[data-scene="4"] .s4-stair { position: absolute; --sc: var(--hanmin); }
+.scene[data-scene="4"] .s4-gb { --sc: var(--gbs); }
+/* 학교가 바뀔 때: 앞 계단이 먼저 물러나고, 다음 계단이 들어온다(겹침 금지) */
+.scene[data-scene="4"] .s4-hm[data-in].on { transition-delay: 450ms; }
+.scene[data-scene="4"] .s4-gb[data-out]:not(.off),
+.scene[data-scene="4"] .s4-flag[data-out]:not(.off),
+.scene[data-scene="4"] .s4-flagline[data-out]:not(.off) { transition-delay: 450ms; }
+
+/* 계단 윤곽(발광 선) */
+.scene[data-scene="4"] .s4-profile { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.scene[data-scene="4"] .s4-profile path { fill: none; stroke: var(--sc); stroke-width: 1.2; opacity: .35; }
+
+/* 학교 이름 + 문서 연도: 계단 왼쪽 위의 빈 삼각형 자리 */
+.scene[data-scene="4"] .s4-school { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; gap: 6px; text-shadow: 0 1px 12px rgb(0 0 0 / 90%); }
+.scene[data-scene="4"] .s4-school .sch { font: 800 30px var(--font); color: var(--night-ink); align-self: flex-start; }
+.scene[data-scene="4"] .s4-school small { font: 500 20px var(--font); color: var(--night-soft); }
+
+/* 발판 */
+.scene[data-scene="4"] .s4-tread { position: absolute; height: 0; border-top: 1px solid var(--night-faint); opacity: .55; transition: border-color 500ms, opacity 500ms; }
+.scene[data-scene="4"] .s4-tread.solid { border-top: 3px solid var(--sc); opacity: 1; filter: drop-shadow(0 0 6px var(--sc)); }
+.scene[data-scene="4"] .s4-tread.gap { border-top: 3px dashed var(--red); opacity: 1; }
+.scene[data-scene="4"] .s4-stair.filled .s4-tread.gap {
+  border-top: 3px solid var(--glow); height: 34px;
+  background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--glow) 32%, transparent) 0 3px, transparent 3px 11px);
+  filter: drop-shadow(0 0 6px var(--glow));
+}
+.scene[data-scene="4"] .s4-col { position: absolute; text-align: center; font: 500 18px var(--font); color: var(--night-soft); text-shadow: 0 1px 8px rgb(0 0 0 / 95%); }
+
+/* 과목 블록: 반투명 면 + 발광 테두리 */
+.scene[data-scene="4"] .s4-chip {
+  --k: var(--sc);
+  position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 0 8px; text-align: center; color: var(--night-ink);
+  font: 700 19px/1.12 var(--font); letter-spacing: -.02em;
+  background: color-mix(in srgb, var(--k) 30%, rgb(5 8 14 / 55%));
+  border: 1.5px solid var(--k);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--k) 40%, transparent);
+  transition: left 650ms var(--ease), top 650ms var(--ease), width 650ms var(--ease), background-color 500ms, border-color 500ms, opacity 450ms;
+}
+.scene[data-scene="4"] .s4-chip.ai { --k: var(--ai); }
+.scene[data-scene="4"] .s4-chip.etc { --k: var(--night-soft); background: rgb(5 8 14 / 55%); box-shadow: none; }
+.scene[data-scene="4"] .s4-chip.gone { opacity: 0; }
+.scene[data-scene="4"] .s4-chip .note { position: absolute; left: 0; bottom: calc(100% + 6px); white-space: nowrap; font: 600 18px var(--font); font-style: normal; color: var(--glow); text-shadow: 0 1px 8px rgb(0 0 0 / 95%); }
+.scene[data-scene="4"] .s4-chip .note.below { bottom: auto; top: calc(100% + 52px); }
+.scene[data-scene="4"] .s4-stair.noanim .s4-chip { transition: none !important; }
+
+/* 빈칸 이름표 */
+.scene[data-scene="4"] .s4-gaplabel { position: absolute; text-align: center; opacity: 0; transition: opacity 400ms; text-shadow: 0 1px 10px rgb(0 0 0 / 95%); }
+.scene[data-scene="4"] .s4-gaplabel.show { opacity: 1; }
+.scene[data-scene="4"] .s4-gaplabel b { display: block; font: 800 26px var(--font); color: var(--red); }
+.scene[data-scene="4"] .s4-gaplabel .g2 { display: none; color: var(--glow); }
+.scene[data-scene="4"] .s4-gaplabel span { font: 600 20px var(--font); color: var(--night-ink); }
+.scene[data-scene="4"] .s4-stair.filled .g1 { display: none; }
+.scene[data-scene="4"] .s4-stair.filled .g2 { display: block; }
+
+/* 4-1 경기북과학고 주석 */
+.scene[data-scene="4"] .s4-flag { left: 56px; top: 180px; font-size: 22px; color: var(--glow); }
+.scene[data-scene="4"] .s4-flagline { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* 4-3 연도 + 비율 막대 */
+.scene[data-scene="4"] .s4-years { position: absolute; left: 50px; top: 488px; width: 900px; }
+.scene[data-scene="4"] .s4-track { position: relative; height: 62px; }
+.scene[data-scene="4"] .s4-rail { position: absolute; left: 170px; width: 560px; top: 9px; height: 2px; background: var(--night-faint); }
+.scene[data-scene="4"] .s4-tick {
+  position: absolute; top: 0; transform: translateX(-50%); background: none; border: 0; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 0; color: var(--night-soft); white-space: nowrap;
+}
+.scene[data-scene="4"] .s4-tick::before { content: ""; width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--night-faint); background: var(--night); transition: all 300ms; }
+.scene[data-scene="4"] .s4-tick b { font: 700 22px var(--font); }
+.scene[data-scene="4"] .s4-tick small { font: 500 18px var(--font); }
+.scene[data-scene="4"] .s4-tick.seen::before { border-color: var(--hanmin); }
+.scene[data-scene="4"] .s4-tick.cur { color: var(--night-ink); }
+.scene[data-scene="4"] .s4-tick.cur::before { background: var(--hanmin); border-color: var(--hanmin); box-shadow: 0 0 12px var(--hanmin); }
+.scene[data-scene="4"] .s4-ratio { display: flex; height: 50px; margin-top: 34px; gap: 3px; }
+.scene[data-scene="4"] .s4-ratio > div {
+  flex: 1 1 0; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 8px; overflow: hidden;
+  color: var(--night-ink); transition: flex-grow 650ms var(--ease);
+}
+.scene[data-scene="4"] .s4-ratio b { font: 800 26px var(--font); }
+.scene[data-scene="4"] .s4-ratio span { font: 600 18px var(--font); white-space: nowrap; }
+.scene[data-scene="4"] .s4-ratio .prog { background: color-mix(in srgb, var(--hanmin) 55%, transparent); border: 1.5px solid var(--hanmin); }
+.scene[data-scene="4"] .s4-ratio .ai { background: color-mix(in srgb, var(--ai) 55%, transparent); border: 1.5px solid var(--ai); }
+.scene[data-scene="4"] .s4-ratio .etc { background: rgb(5 8 14 / 55%); border: 1.5px solid var(--night-soft); }
+.scene[data-scene="4"] .s4-ratio > div:not(.empty) { min-width: 170px; }
+.scene[data-scene="4"] .s4-ratio .empty { border-width: 0; }
+.scene[data-scene="4"] .s4-ratio .empty span { display: none; }
+.scene[data-scene="4"] .s4-shift { margin-top: 16px; display: flex; align-items: baseline; gap: 14px; font: 800 34px var(--font); letter-spacing: -.03em; text-shadow: 0 1px 12px rgb(0 0 0 / 90%); }
+.scene[data-scene="4"] .s4-shift .from { color: var(--hanmin); }
+.scene[data-scene="4"] .s4-shift .arr { color: var(--night-soft); }
+.scene[data-scene="4"] .s4-shift .to { color: var(--ai); }
+.scene[data-scene="4"] .s4-src { margin-top: 6px; font: 500 13px var(--font); color: var(--night-soft); }
+
+/* 4-4 첫 관문 */
+.scene[data-scene="4"] .s4-stair.gate .s4-chip[data-id="info"] { outline: 3px solid var(--red); outline-offset: 5px; }
+/* 첫 관문 단계에서는 관문(정보)만 또렷하게, 나머지 블록은 물러난다 */
+.scene[data-scene="4"] .s4-stair.gate .s4-chip:not(.gone):not([data-id="info"]) { opacity: .32; }
+.scene[data-scene="4"] .s4-gatelabel { position: absolute; left: 186px; top: 276px; width: 150px; text-align: right; font: 800 28px var(--font); color: var(--red); text-shadow: 0 1px 10px rgb(0 0 0 / 95%); }
+.scene[data-scene="4"] .s4-gatelabel::after { content: "→"; margin-left: 8px; }
+/* 계획서에서 오려 낸 표 조각(모양은 deck.css .doc-cut) */
+.scene[data-scene="4"] .s4-plan { left: 40px; top: 500px; width: 470px; }
+.scene[data-scene="4"] .s4-entry { position: absolute; left: 520px; top: 488px; width: 440px; display: flex; flex-direction: column; gap: 22px; text-shadow: 0 1px 12px rgb(0 0 0 / 90%); }
+.scene[data-scene="4"] .s4-e1 .num { font-size: 56px; }
+.scene[data-scene="4"] .s4-e1 .num i { font-style: normal; color: var(--red); }
+.scene[data-scene="4"] .s4-e1 p, .scene[data-scene="4"] .s4-e2 p { margin: 8px 0 0; font: 500 20px/1.45 var(--font); color: var(--night-soft); }
+.scene[data-scene="4"] .s4-e2 b { display: block; font: 800 26px var(--font); color: var(--night-ink); }
+.scene[data-scene="4"] .s4-grades { display: flex; gap: 6px; }
+.scene[data-scene="4"] .s4-grades span { width: 40px; height: 40px; display: grid; place-items: center; font: 700 20px var(--font); color: var(--night-soft); border: 1.5px solid var(--night-faint); }
+.scene[data-scene="4"] .s4-grades .one { color: var(--night); background: var(--lamp); border-color: var(--lamp); box-shadow: 0 0 14px var(--lamp); }
+.scene[data-scene="4"] .s4-plan[data-in].on,
+.scene[data-scene="4"] .s4-entry[data-in].on,
+.scene[data-scene="4"] .s4-gatelabel[data-in].on { transition-delay: 450ms; }
+
+/* 4-5 비교과 블록 → 라운지 */
+.scene[data-scene="4"] .s4-extra { position: absolute; inset: 0; pointer-events: none; }
+.scene[data-scene="4"] .s4-extra[data-in].on { transition-delay: 300ms; }
+.scene[data-scene="4"] .s4-brick {
+  position: absolute; display: grid; place-items: center; text-align: center;
+  font: 700 20px var(--font); color: var(--night-ink);
+  background: rgb(5 8 14 / 72%); border: 1.5px dashed var(--glow);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--glow) 35%, transparent);
+}
+.scene[data-scene="4"] .s4-row { position: absolute; }
+.scene[data-scene="4"] .s4-threads { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.scene[data-scene="4"] .s4-threads[data-in].on { transition-delay: 700ms; }
+.scene[data-scene="4"] .s4-threads path { stroke-width: 2; }
+.scene[data-scene="4"] .s4-lounge { transform: translate(-50%, 16px); display: flex; flex-direction: column; align-items: center; text-shadow: 0 1px 10px rgb(0 0 0 / 95%); }
+.scene[data-scene="4"] .s4-lounge b { font: 800 26px var(--font); color: var(--lamp); }
+.scene[data-scene="4"] .s4-lounge i { font: 600 20px var(--font); font-style: normal; color: var(--lamp); opacity: .9; }
+.scene[data-scene="4"] .s4-lounge[data-in].on { transition-delay: 900ms; }
